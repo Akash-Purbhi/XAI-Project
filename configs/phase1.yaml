@@ -1,0 +1,67 @@
+# Configuration for Phase 1: Replication of AAAI 2024 EEG Paper
+# "Learning Performance Maximizing Ensembles with Explainability Guarantees"
+
+datasets:
+  - name: "Wine"
+    type: "classification"
+    openml_id: 44091
+    target_col: "class"
+  - name: "Bank"
+    type: "classification"
+    openml_id: 44126
+    target_col: "Class"
+  - name: "PolR"
+    type: "regression"
+    openml_id: 44133
+    target_col: "target"
+  - name: "SuperconductR"
+    type: "regression"
+    openml_id: 44148
+    target_col: "critical_temp"
+  - name: "BrazilianHousesR"
+    type: "regression"
+    openml_id: 44141
+    target_col: "total"
+
+experiment:
+  seeds: [0, 1, 2, 3, 4]
+  split:
+    train: 0.70
+    val: 0.09
+    test: 0.21
+  q_grid:
+    start: 0.0
+    stop: 1.0
+    step: 0.01
+  random_repetitions: 10
+
+preprocessing:
+  scale_features: true
+  scale_range: [-1.0, 1.0]
+  fit_on: "train"
+
+models:
+  glass_box:
+    classification: ["LogisticRegression", "DecisionTreeClassifier"]
+    regression: ["LinearRegression", "DecisionTreeRegressor"]
+  black_box:
+    classification: ["GradientBoostingClassifier", "TabWRN"]
+    regression: ["GradientBoostingRegressor", "TabWRN"]
+  allocator:
+    types: ["GradientBoostingRegressor", "TabWRN"]
+    default_type: "GradientBoostingRegressor"
+    feature_augmentation: "kitchen_sink" # [x, g(x), b(x), d_ce, d_mse]
+
+tuning:
+  cv_folds: 4
+  scoring:
+    classification: "accuracy"
+    regression: "neg_mean_squared_error"
+
+paths:
+  results_raw: "results/raw"
+  results_processed: "results/processed"
+  paper_comparison: "results/paper_comparison"
+  figures: "figures"
+  tables: "tables"
+  logs: "experiments/phase1/logs"

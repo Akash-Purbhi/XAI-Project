@@ -1,0 +1,40 @@
+{
+  "dataset": "PolR",
+  "task_type": "regression",
+  "seed": 0,
+  "gb_model": "RegressionTree",
+  "gb_params": {
+    "max_depth": 16,
+    "max_leaf_nodes": null,
+    "min_samples_split": 10
+  },
+  "bb_model": "GradientBoostingRegressor",
+  "bb_params": {
+    "learning_rate": 0.1,
+    "max_depth": 6,
+    "n_estimators": 128,
+    "subsample": 0.8
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 87.77,
+    "PPCR": 31.24,
+    "PQEOM": 99.01,
+    "PQOM": 98.02,
+    "PCFA": 100.0,
+    "95TQM": 100.0,
+    "Max_Acc": 88.35,
+    "Argmax_q": 23.0,
+    "s_Acc": 81.56,
+    "GB_Perf": 86.19,
+    "BB_Perf": 86.13
+  },
+  "n_samples": 15000,
+  "n_features": 26,
+  "test_category_counts": {
+    "Zg": 175,
+    "Zb": 173,
+    "Z2": 2540,
+    "Z0": 262
+  }
+}

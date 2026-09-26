@@ -1,0 +1,9 @@
+[2026-09-25 06:11:20] [INFO] === Starting EEG Replication: BrazilianHousesR (Seed 4) ===
+[2026-09-25 06:11:20] [INFO] Loaded BrazilianHousesR: 10692 samples, 8 features, task=regression
+[2026-09-25 06:11:20] [INFO] Splits created: Train=7483, Val=963, Test=2246
+[2026-09-25 06:12:11] [INFO] Selected Component Models: Glass-Box=RegressionTree, Black-Box=GradientBoostingRegressor
+[2026-09-25 06:12:11] [INFO] Regression Sufficiency Threshold epsilon: 0.00005
+[2026-09-25 06:12:11] [INFO] Standalone Test Performance: Glass-Box=66.52%, Black-Box=71.99%
+[2026-09-25 06:12:13] [INFO] Sufficiency Category Estimation Accuracy: 54.59%
+[2026-09-25 06:12:13] [INFO] EEG Metrics computed: {'AUC': 71.23, 'PPCR': 12.05, 'PQEOM': 30.69, 'PQOM': 27.72, 'PCFA': 38.61, '95TQM': 91.0, 'Max_Acc': 74.09, 'Argmax_q': 14.0, 's_Acc': 54.59, 'GB_Perf': 66.52, 'BB_Perf': 71.99}
+[2026-09-25 06:12:13] [INFO] Results saved to results/raw\BrazilianHousesR_seed4_curve.csv and results/raw\BrazilianHousesR_seed4_summary.json

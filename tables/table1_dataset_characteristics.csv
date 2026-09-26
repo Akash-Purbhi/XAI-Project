@@ -1,0 +1,6 @@
+Dataset,Task,Samples,Features,Train,Validation,Test,OpenML_ID
+Bank,Classification,10578,7,7405,952,2221,44126
+BrazilianHousesR,Regression,10692,8,7484,962,2246,44141
+PolR,Regression,15000,26,10500,1350,3150,44133
+SuperconductR,Regression,21263,79,14884,1914,4465,44148
+Wine,Classification,2554,11,1788,230,536,44091

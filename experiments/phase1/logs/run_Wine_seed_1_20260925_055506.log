@@ -1,0 +1,8 @@
+[2026-09-25 05:55:06] [INFO] === Starting EEG Replication: Wine (Seed 1) ===
+[2026-09-25 05:55:06] [INFO] Loaded Wine: 2554 samples, 11 features, task=classification
+[2026-09-25 05:55:06] [INFO] Splits created: Train=1787, Val=230, Test=537
+[2026-09-25 05:55:38] [INFO] Selected Component Models: Glass-Box=LogisticRegression, Black-Box=GradientBoostingClassifier
+[2026-09-25 05:55:39] [INFO] Standalone Test Performance: Glass-Box=75.05%, Black-Box=80.82%
+[2026-09-25 05:55:39] [INFO] Sufficiency Category Estimation Accuracy: 74.67%
+[2026-09-25 05:55:40] [INFO] EEG Metrics computed: {'AUC': 79.73, 'PPCR': 21.08, 'PQEOM': 36.63, 'PQOM': 0.0, 'PCFA': 54.46, '95TQM': 98.0, 'Max_Acc': 80.82, 'Argmax_q': 36.0, 's_Acc': 74.67, 'GB_Perf': 75.05, 'BB_Perf': 80.82}
+[2026-09-25 05:55:40] [INFO] Results saved to results/raw\Wine_seed1_curve.csv and results/raw\Wine_seed1_summary.json

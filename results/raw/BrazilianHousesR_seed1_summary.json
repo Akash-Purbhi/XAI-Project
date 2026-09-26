@@ -1,0 +1,40 @@
+{
+  "dataset": "BrazilianHousesR",
+  "task_type": "regression",
+  "seed": 1,
+  "gb_model": "RegressionTree",
+  "gb_params": {
+    "max_depth": null,
+    "max_leaf_nodes": null,
+    "min_samples_split": 2
+  },
+  "bb_model": "GradientBoostingRegressor",
+  "bb_params": {
+    "learning_rate": 0.1,
+    "max_depth": 3,
+    "n_estimators": 128,
+    "subsample": 0.8
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 71.32,
+    "PPCR": 1.19,
+    "PQEOM": 44.55,
+    "PQOM": 39.6,
+    "PCFA": 36.63,
+    "95TQM": 100.0,
+    "Max_Acc": 73.33,
+    "Argmax_q": 82.0,
+    "s_Acc": 58.59,
+    "GB_Perf": 70.75,
+    "BB_Perf": 71.37
+  },
+  "n_samples": 10692,
+  "n_features": 8,
+  "test_category_counts": {
+    "Zg": 403,
+    "Zb": 417,
+    "Z2": 1186,
+    "Z0": 240
+  }
+}

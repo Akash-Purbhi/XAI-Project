@@ -1,0 +1,9 @@
+[2026-09-25 06:03:08] [INFO] === Starting EEG Replication: SuperconductR (Seed 1) ===
+[2026-09-25 06:03:12] [INFO] Loaded SuperconductR: 21263 samples, 79 features, task=regression
+[2026-09-25 06:03:12] [INFO] Splits created: Train=14883, Val=1914, Test=4466
+[2026-09-25 06:27:34] [INFO] Selected Component Models: Glass-Box=RegressionTree, Black-Box=GradientBoostingRegressor
+[2026-09-25 06:27:34] [INFO] Regression Sufficiency Threshold epsilon: 0.01938
+[2026-09-25 06:27:34] [INFO] Standalone Test Performance: Glass-Box=80.99%, Black-Box=81.50%
+[2026-09-25 06:28:07] [INFO] Sufficiency Category Estimation Accuracy: 73.89%
+[2026-09-25 06:28:07] [INFO] EEG Metrics computed: {'AUC': 81.69, 'PPCR': 7.2, 'PQEOM': 40.59, 'PQOM': 38.61, 'PCFA': 38.61, '95TQM': 100.0, 'Max_Acc': 82.74, 'Argmax_q': 32.0, 's_Acc': 73.89, 'GB_Perf': 80.99, 'BB_Perf': 81.5}
+[2026-09-25 06:28:07] [INFO] Results saved to results/raw\SuperconductR_seed1_curve.csv and results/raw\SuperconductR_seed1_summary.json

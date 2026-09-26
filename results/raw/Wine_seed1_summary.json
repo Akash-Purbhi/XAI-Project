@@ -1,0 +1,38 @@
+{
+  "dataset": "Wine",
+  "task_type": "classification",
+  "seed": 1,
+  "gb_model": "LogisticRegression",
+  "gb_params": {
+    "C": 0.1
+  },
+  "bb_model": "GradientBoostingClassifier",
+  "bb_params": {
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "n_estimators": 128,
+    "subsample": 0.8
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 79.73,
+    "PPCR": 21.08,
+    "PQEOM": 36.63,
+    "PQOM": 0.0,
+    "PCFA": 54.46,
+    "95TQM": 98.0,
+    "Max_Acc": 80.82,
+    "Argmax_q": 36.0,
+    "s_Acc": 74.67,
+    "GB_Perf": 75.05,
+    "BB_Perf": 80.82
+  },
+  "n_samples": 2554,
+  "n_features": 11,
+  "test_category_counts": {
+    "Zg": 37,
+    "Zb": 68,
+    "Z2": 366,
+    "Z0": 66
+  }
+}

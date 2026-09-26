@@ -1,0 +1,40 @@
+{
+  "dataset": "Bank",
+  "task_type": "classification",
+  "seed": 2,
+  "gb_model": "ClassificationTree",
+  "gb_params": {
+    "max_depth": 12,
+    "max_leaf_nodes": 32,
+    "min_samples_split": 2
+  },
+  "bb_model": "GradientBoostingClassifier",
+  "bb_params": {
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "n_estimators": 128,
+    "subsample": 0.8
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 80.45,
+    "PPCR": 24.7,
+    "PQEOM": 54.46,
+    "PQOM": 0.0,
+    "PCFA": 88.12,
+    "95TQM": 100.0,
+    "Max_Acc": 80.6,
+    "Argmax_q": 75.0,
+    "s_Acc": 76.01,
+    "GB_Perf": 78.67,
+    "BB_Perf": 80.6
+  },
+  "n_samples": 10578,
+  "n_features": 7,
+  "test_category_counts": {
+    "Zg": 55,
+    "Zb": 98,
+    "Z2": 1693,
+    "Z0": 376
+  }
+}

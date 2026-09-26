@@ -1,0 +1,8 @@
+[2026-09-25 05:57:49] [INFO] === Starting EEG Replication: Bank (Seed 2) ===
+[2026-09-25 05:57:49] [INFO] Loaded Bank: 10578 samples, 7 features, task=classification
+[2026-09-25 05:57:49] [INFO] Splits created: Train=7404, Val=952, Test=2222
+[2026-09-25 05:58:39] [INFO] Selected Component Models: Glass-Box=ClassificationTree, Black-Box=GradientBoostingClassifier
+[2026-09-25 05:58:39] [INFO] Standalone Test Performance: Glass-Box=78.67%, Black-Box=80.60%
+[2026-09-25 05:58:41] [INFO] Sufficiency Category Estimation Accuracy: 76.01%
+[2026-09-25 05:58:41] [INFO] EEG Metrics computed: {'AUC': 80.45, 'PPCR': 24.7, 'PQEOM': 54.46, 'PQOM': 0.0, 'PCFA': 88.12, '95TQM': 100.0, 'Max_Acc': 80.6, 'Argmax_q': 75.0, 's_Acc': 76.01, 'GB_Perf': 78.67, 'BB_Perf': 80.6}
+[2026-09-25 05:58:41] [INFO] Results saved to results/raw\Bank_seed2_curve.csv and results/raw\Bank_seed2_summary.json

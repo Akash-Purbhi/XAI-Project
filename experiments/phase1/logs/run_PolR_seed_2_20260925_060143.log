@@ -1,0 +1,9 @@
+[2026-09-25 06:01:43] [INFO] === Starting EEG Replication: PolR (Seed 2) ===
+[2026-09-25 06:01:43] [INFO] Loaded PolR: 15000 samples, 26 features, task=regression
+[2026-09-25 06:01:43] [INFO] Splits created: Train=10499, Val=1351, Test=3150
+[2026-09-25 06:03:00] [INFO] Selected Component Models: Glass-Box=RegressionTree, Black-Box=GradientBoostingRegressor
+[2026-09-25 06:03:00] [INFO] Regression Sufficiency Threshold epsilon: 0.00919
+[2026-09-25 06:03:00] [INFO] Standalone Test Performance: Glass-Box=86.70%, Black-Box=85.56%
+[2026-09-25 06:03:03] [INFO] Sufficiency Category Estimation Accuracy: 80.86%
+[2026-09-25 06:03:04] [INFO] EEG Metrics computed: {'AUC': 88.21, 'PPCR': 36.31, 'PQEOM': 98.02, 'PQOM': 97.03, 'PCFA': 100.0, '95TQM': 100.0, 'Max_Acc': 88.76, 'Argmax_q': 52.0, 's_Acc': 80.86, 'GB_Perf': 86.7, 'BB_Perf': 85.56}
+[2026-09-25 06:03:04] [INFO] Results saved to results/raw\PolR_seed2_curve.csv and results/raw\PolR_seed2_summary.json

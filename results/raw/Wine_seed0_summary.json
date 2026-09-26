@@ -1,0 +1,40 @@
+{
+  "dataset": "Wine",
+  "task_type": "classification",
+  "seed": 0,
+  "gb_model": "ClassificationTree",
+  "gb_params": {
+    "max_depth": null,
+    "max_leaf_nodes": 64,
+    "min_samples_split": 2
+  },
+  "bb_model": "GradientBoostingClassifier",
+  "bb_params": {
+    "learning_rate": 0.05,
+    "max_depth": 6,
+    "n_estimators": 128,
+    "subsample": 0.8
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 81.43,
+    "PPCR": 36.17,
+    "PQEOM": 27.72,
+    "PQOM": 1.98,
+    "PCFA": 88.12,
+    "95TQM": 95.0,
+    "Max_Acc": 82.5,
+    "Argmax_q": 80.0,
+    "s_Acc": 78.96,
+    "GB_Perf": 75.05,
+    "BB_Perf": 82.12
+  },
+  "n_samples": 2554,
+  "n_features": 11,
+  "test_category_counts": {
+    "Zg": 25,
+    "Zb": 63,
+    "Z2": 378,
+    "Z0": 71
+  }
+}
