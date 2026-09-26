@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Ensembles with Explainability Guarantees (EEG) — Phase 1 Replication
 
 [![Conference](https://img.shields.io/badge/Replication-AAAI%202024-blue.svg)](https://ojs.aaai.org/index.php/AAAI/article/view/29379)
@@ -312,3 +313,6 @@ Below is the consolidated comparison between the numbers published in Pisztora &
 - **Data Integrity:** Dataset hashes and OpenML identifiers are checked on load to prevent silent data drifts.
 - **Leakage Prevention:** Standard scalers and categorical encoders are strictly fitted on `X_train` and applied to `X_val` and `X_test`.
 - **Zero Mocking:** All numbers, curves, and tables are computed from actual model fits on the specified OpenML datasets.
+=======
+# XAI-Project
+>>>>>>> a1d79837e9ca164ab9a41f2aab6e5530dd0bf0bc
