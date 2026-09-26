@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Ensembles with Explainability Guarantees (EEG) — Phase 1 Replication
 
 [![Conference](https://img.shields.io/badge/Replication-AAAI%202024-blue.svg)](https://ojs.aaai.org/index.php/AAAI/article/view/29379)
@@ -39,7 +38,7 @@ The central problem addressed by EEG is the pervasive **performance vs. explaina
 - Black-box models like Gradient Boosted Trees and Deep Neural Networks achieve state-of-the-art accuracy at the cost of opacity.
 - Post-hoc explainers (e.g., LIME, SHAP) can provide local approximations, but they do **not** provide mathematical guarantees of faithfulness, are computationally prohibitive, and can mislead auditors.
 
-**EEG resolves this trade-off** by constructing an optimal hybrid ensemble: an allocation mechanism routes a controllable fraction $q \in [0, 1]$ of test queries to the glass-box model, guaranteeing that at least a fraction $q$ of decisions are intrinsically explainable, while maximizing global ensemble predictive performance.
+**EEG resolves this trade-off** by constructing an optimal hybrid ensemble: an allocation mechanism routes a controllable fraction $q \in [0, 1]$ of test queries to the glass-box model, guaranteeing the explainability quota while preserving predictive performance.
 
 ---
 
@@ -295,11 +294,11 @@ Below is the consolidated comparison between the numbers published in Pisztora &
 ## 11. Critical Discussion & Analysis of Discrepancies
 
 1. **Model Selection & Grid Resolution:**
-   The original paper evaluates a broader hyperparameter grid (`xl` grid) and incorporates LightGBM and multi-variant neural architectures. In our replication, we constrained the search space to prevent hardware oversubscription while preserving the 4-fold cross-validation protocol. This minor variance explains small differences in component model standalone baselines.
+   The original paper evaluates a broader hyperparameter grid (`xl` grid) and incorporates LightGBM and multi-variant neural architectures. In our replication, we constrained the search space to the implementation-level settings that are tractable within the project scope and consistent with available compute.
 2. **Regression $\varepsilon$ Cutoff Calibration:**
-   In regression tasks (PolR, SuperconductR, BrazilianHousesR), the sufficiency threshold $\varepsilon$ is computed strictly from the validation set without looking at test data. Differences in sample shuffling seeds lead to slight variations in $\varepsilon$, which propagates into the sufficiency accuracy ($s\_Acc$).
+   In regression tasks (PolR, SuperconductR, BrazilianHousesR), the sufficiency threshold $\varepsilon$ is computed strictly from the validation set without looking at test data. Differences in sample distribution or calibration can produce moderate shifts in sufficiency-based metrics.
 3. **Random Allocator Monte Carlo Noise:**
-   The paper computes the Random baseline over a finite number of runs. In our replication, we averaged over 10 independent random assignments per $q$ point, producing a smoother curve and slightly altering the PPCR denominator.
+   The paper computes the Random baseline over a finite number of runs. In our replication, we averaged over 10 independent random assignments per $q$ point, producing a smoother curve and slightly altered estimates.
 4. **Generalization of Explainability Guarantees:**
    Across all 5 datasets, the fundamental scientific claims of Pisztora & Li (AAAI 2024) are validated:
    - **EEG strictly dominates random allocation across all $q \in [0, 1]$**.
@@ -313,6 +312,3 @@ Below is the consolidated comparison between the numbers published in Pisztora &
 - **Data Integrity:** Dataset hashes and OpenML identifiers are checked on load to prevent silent data drifts.
 - **Leakage Prevention:** Standard scalers and categorical encoders are strictly fitted on `X_train` and applied to `X_val` and `X_test`.
 - **Zero Mocking:** All numbers, curves, and tables are computed from actual model fits on the specified OpenML datasets.
-=======
-# XAI-Project
->>>>>>> a1d79837e9ca164ab9a41f2aab6e5530dd0bf0bc
