@@ -75,8 +75,9 @@ class TestAllocator(unittest.TestCase):
         perf_random = evaluate_random_allocator(s_g, s_b, q_grid, n_repetitions=20, seed=42)
 
         # AUC(oracle) >= AUC(random)
-        auc_oracle = np.trapz(perf_oracle, q_grid)
-        auc_random = np.trapz(perf_random, q_grid)
+        trapz_fn = getattr(np, "trapezoid", getattr(np, "trapz", None))
+        auc_oracle = trapz_fn(perf_oracle, q_grid)
+        auc_random = trapz_fn(perf_random, q_grid)
         self.assertGreaterEqual(auc_oracle, auc_random - 1e-4)
 
 

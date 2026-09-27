@@ -1,0 +1,40 @@
+{
+  "dataset": "SuperconductR",
+  "task_type": "regression",
+  "seed": 4,
+  "gb_model": "RegressionTree",
+  "gb_params": {
+    "max_depth": null,
+    "max_leaf_nodes": null,
+    "min_samples_split": 10
+  },
+  "bb_model": "GradientBoostingRegressor",
+  "bb_params": {
+    "learning_rate": 0.1,
+    "max_depth": 6,
+    "n_estimators": 128,
+    "subsample": 1.0
+  },
+  "allocator_model": "GradientBoostingRegressor",
+  "metrics": {
+    "AUC": 80.21,
+    "PPCR": 4.24,
+    "PQEOM": 40.59,
+    "PQOM": 37.62,
+    "PCFA": 90.1,
+    "95TQM": 100.0,
+    "Max_Acc": 81.12,
+    "Argmax_q": 34.0,
+    "s_Acc": 72.41,
+    "GB_Perf": 79.29,
+    "BB_Perf": 80.61
+  },
+  "n_samples": 21263,
+  "n_features": 79,
+  "test_category_counts": {
+    "Zg": 311,
+    "Zb": 370,
+    "Z2": 3230,
+    "Z0": 555
+  }
+}

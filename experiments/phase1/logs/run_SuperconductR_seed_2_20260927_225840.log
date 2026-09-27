@@ -1,0 +1,7 @@
+[2026-09-27 22:58:40] [INFO] === Starting EEG Replication: SuperconductR (Seed 2) ===
+[2026-09-27 22:58:52] [INFO] Loaded SuperconductR: 21263 samples, 79 features, task=regression
+[2026-09-27 22:58:52] [INFO] Splits created: Train=14883, Val=1914, Test=4466
+[2026-09-27 23:04:15] [INFO] Selected Component Models: Glass-Box=RegressionTree, Black-Box=GradientBoostingRegressor
+[2026-09-27 23:04:15] [INFO] Regression Sufficiency Threshold epsilon: 0.01277
+[2026-09-27 23:04:15] [INFO] Standalone Test Performance: Glass-Box=82.29%, Black-Box=82.83%
+[2026-09-27 23:04:39] [INFO] Sufficiency Category Estimation Accuracy: 75.73%

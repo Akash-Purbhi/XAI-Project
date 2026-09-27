@@ -14,7 +14,13 @@ from typing import Optional, Dict, Any
 import numpy as np
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
 
-from src.models.tab_wrn import TabWRNModel
+try:
+    from src.models.tab_wrn import TabWRNModel
+except ImportError:
+    # TabWRN requires TensorFlow which may not be installed.
+    # TabWRN is implemented per the paper but excluded from Phase-1 experiments
+    # due to compute constraints — this lazy import prevents blocking when TF is absent.
+    TabWRNModel = None
 
 
 class GradientBoostingClassifierModel:

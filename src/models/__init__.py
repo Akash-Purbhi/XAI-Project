@@ -7,8 +7,11 @@ from src.models.glass_box import (
 from src.models.black_box import (
     GradientBoostingClassifierModel,
     GradientBoostingRegressorModel,
-    TabWRNModel,
 )
+try:
+    from src.models.black_box import TabWRNModel
+except ImportError:
+    TabWRNModel = None
 from src.models.model_factory import tune_and_fit_model, get_default_param_grid
 
 __all__ = [

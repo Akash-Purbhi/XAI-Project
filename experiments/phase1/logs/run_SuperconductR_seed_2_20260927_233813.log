@@ -1,0 +1,3 @@
+[2026-09-27 23:38:13] [INFO] === Starting EEG Replication: SuperconductR (Seed 2) ===
+[2026-09-27 23:38:13] [INFO] Loaded SuperconductR: 21263 samples, 79 features, task=regression
+[2026-09-27 23:38:13] [INFO] Splits created: Train=14883, Val=1914, Test=4466

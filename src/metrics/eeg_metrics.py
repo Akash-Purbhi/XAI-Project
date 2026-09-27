@@ -21,6 +21,8 @@ def compute_auc(perf_curve: np.ndarray, q_grid: np.ndarray) -> float:
     Compute area under the curve using trapezoidal rule.
     Returns value in [0, 1].
     """
+    if hasattr(np, "trapezoid"):
+        return float(np.trapezoid(perf_curve, q_grid))
     return float(np.trapz(perf_curve, q_grid))
 
 

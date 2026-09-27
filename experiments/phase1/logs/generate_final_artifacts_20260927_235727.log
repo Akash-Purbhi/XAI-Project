@@ -1,0 +1,19 @@
+[2026-09-27 23:57:27] [INFO] === Generating All Phase 1 Replication Artifacts ===
+[2026-09-27 23:57:27] [INFO] Found 25 run summaries in results/raw
+[2026-09-27 23:57:27] [INFO] Datasets represented: ['Bank', 'BrazilianHousesR', 'PolR', 'SuperconductR', 'Wine']
+[2026-09-27 23:57:27] [INFO]   Bank: 5 seeds
+[2026-09-27 23:57:27] [INFO]   BrazilianHousesR: 5 seeds
+[2026-09-27 23:57:27] [INFO]   PolR: 5 seeds
+[2026-09-27 23:57:27] [INFO]   SuperconductR: 5 seeds
+[2026-09-27 23:57:27] [INFO]   Wine: 5 seeds
+[2026-09-27 23:57:27] [INFO] Generating Table 1...
+[2026-09-27 23:57:48] [INFO] Aggregating into Tables 2, 3, 4...
+[2026-09-27 23:57:48] [INFO] Saved Figure 2 to figures\performance_explainability\fig2_bank_tradeoff.png
+[2026-09-27 23:57:48] [INFO] Saved Figure 5 to figures\performance_explainability\fig5_brazilianhousesr_tradeoff.png
+[2026-09-27 23:57:49] [INFO] Saved Figure 3 to figures\performance_explainability\fig3_polr_tradeoff.png
+[2026-09-27 23:57:49] [INFO] Saved Figure 4 to figures\performance_explainability\fig4_superconductr_tradeoff.png
+[2026-09-27 23:57:49] [INFO] Saved Figure 1 to figures\performance_explainability\fig1_wine_tradeoff.png
+[2026-09-27 23:57:50] [INFO] Saved Figure 6 to figures\dataset_comparisons\fig6_eeg_vs_component_models.png
+[2026-09-27 23:57:50] [INFO] Saved Figure 7 to figures\paper_comparison\fig7_paper_vs_replication.png
+[2026-09-27 23:57:50] [INFO] 
+=== All Artifacts Generated Successfully ===
