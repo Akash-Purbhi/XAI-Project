@@ -17,13 +17,12 @@ This document maps each specific requirement from the course replication rubric 
 | **"Dataset link"** | ✅ | [`README.md`](file:///c:/Users/Akash/Desktop/XAI/README.md#L118-L124)<br>[`src/data/loaders.py`](file:///c:/Users/Akash/Desktop/XAI/src/data/loaders.py#L25-L45) | • Direct clickable URLs to OpenML benchmark pages embedded in README Table (`https://www.openml.org/d/44091`, etc.) and registered in dataset metadata. |
 | **"Instructions to run code"** | ✅ | [`README.md`](file:///c:/Users/Akash/Desktop/XAI/README.md#L230-L275) | • Clear step-by-step instructions for conda environment setup, running the 14-test unit suite, executing single-dataset runs, full 25-run pipeline execution, and artifact regeneration. |
 | **"Random seed mentioned"** | ✅ | [`src/utils/seed.py`](file:///c:/Users/Akash/Desktop/XAI/src/utils/seed.py)<br>[`configs/phase1.yaml`](file:///c:/Users/Akash/Desktop/XAI/configs/phase1.yaml#L27)<br>[`README.md`](file:///c:/Users/Akash/Desktop/XAI/README.md#L12) | • Deterministic seed handling across NumPy, Python random, Scikit-Learn, and TensorFlow.<br>• Fixed replicate seeds: [0, 1, 2, 3, 4] explicitly documented in config, paper summary, and code. |
-| **"Each team must clearly divide responsibilities and maintain contribution logs"** | ⚠️ | [`CONTRIBUTIONS.md`](file:///c:/Users/Akash/Desktop/XAI/CONTRIBUTIONS.md) | • **Template created:** Structured markdown template with module-by-module breakdown (Data, Models, Allocator, Metrics/Testing, Reporting).<br>• ⚠️ **Action needed by student/team:** Fill in team member names, student IDs, emails, and sign-offs. |
+| **"Each team must clearly divide responsibilities and maintain contribution logs"** | ⚠️ | Student Contribution Records | • Maintained directly by student team per course guidelines.<br>• ⚠️ **Action needed by student/team:** Prepare team contribution division per submission form or report appendix. |
 
 ---
 
 ## Summary of Manual Actions Required Before Final Submission
 
-1. **`CONTRIBUTIONS.md`**: Fill in team member names, student IDs, and assigned module owners.
-2. **`docs/phase1_summary_1page.md`**: Replace `<!-- FILL IN: Student Name -->` with actual student name.
-3. **`docs/phase1_replication_summary.md`**: Replace `<!-- FILL IN: Student Name -->` and `<!-- FILL IN: University / Institution -->`.
-4. **`AI_USAGE.md`**: Replace `<!-- FILL IN: Student Name -->` and `<!-- FILL IN: University / Institution -->` in header.
+1. **`docs/phase1_summary_1page.md`**: Replace `<!-- FILL IN: Student Name -->` with actual student name.
+2. **`docs/phase1_replication_summary.md`**: Replace `<!-- FILL IN: Student Name -->` and `<!-- FILL IN: University / Institution -->`.
+3. **`AI_USAGE.md`**: Replace `<!-- FILL IN: Student Name -->` and `<!-- FILL IN: University / Institution -->` in header.

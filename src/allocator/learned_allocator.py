@@ -8,10 +8,9 @@ Implements:
 4. Model-selection / ensembling between a'_q and a''_q on validation performance per q
 """
 
-from typing import Tuple, Dict, Any, Optional, List
+from typing import Tuple, Optional, List
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
-from scipy.stats import rankdata
 
 from src.allocator.sufficiency import compute_sufficient_performance
 

@@ -185,6 +185,7 @@ XAI-Project/
 ├── requirements.txt
 ├── README.md                          <-- Comprehensive Phase 1 documentation
 ├── AI_USAGE.md                        <-- University academic integrity log
+├── run_experiments.py                 <-- Unified CLI runner for any dataset/seed
 ├── configs/
 │   └── phase1.yaml                    <-- Experiment hyperparameters & seed config
 ├── docs/
@@ -271,9 +272,16 @@ python -m unittest discover tests -v
 python -m src.experiments.run_single --dataset Wine --seed 0 --q_step 0.01
 ```
 
-### 3. Run the Complete 5-Dataset × 5-Seed Pipeline (25 Runs)
+### 3. Run Experiments (Unified CLI Runner)
 ```bash
-python -m src.experiments.run_phase1 --config configs/phase1.yaml
+# Run a single dataset and seed:
+python run_experiments.py --dataset Wine --seed 0
+
+# Run specific seeds for SuperconductR:
+python run_experiments.py --dataset SuperconductR --seeds 2 3 4
+
+# Run all 5 datasets across all 5 seeds (25 runs):
+python run_experiments.py --all
 ```
 
 ### 4. Regenerate All Aggregated Tables and Figures Downstream

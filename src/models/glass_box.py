@@ -12,7 +12,7 @@ Regression:
 
 from typing import Optional, Dict, Any, Union
 import numpy as np
-from sklearn.linear_model import LogisticRegression, Lasso, Ridge, LinearRegression
+from sklearn.linear_model import LogisticRegression, Lasso, LinearRegression
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 

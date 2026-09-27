@@ -19,7 +19,7 @@ from src.utils.plotting import (
     plot_eeg_vs_component_models,
     plot_paper_vs_replication_comparison,
 )
-from src.data import DATASET_REGISTRY, load_dataset
+from src.data import load_dataset
 from src.experiments.run_single import run_single_dataset
 from src.experiments.aggregation import (
     build_table1_dataset_characteristics,

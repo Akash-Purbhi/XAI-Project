@@ -8,7 +8,7 @@ where sigma(x) = 1 / (1 + exp(-x))
 r(z) = rank_Dn(r_tilde(z)) / n
 """
 
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 import numpy as np
 from scipy.stats import rankdata
 
