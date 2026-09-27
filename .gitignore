@@ -36,3 +36,19 @@ wheels/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Experiment logs and model checkpoints (noisy per-run files)
+experiments/phase1/logs/
+*.log
+*.ckpt
+*.h5
+*.joblib
+*.pkl
+
+# Explicitly ensure graded deliverables remain visible
+!results/
+!results/**
+!tables/
+!tables/**
+!figures/
+!figures/**

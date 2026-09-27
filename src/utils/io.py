@@ -24,4 +24,4 @@ def load_json(filepath: str) -> Dict[str, Any]:
 def save_dataframe(df: pd.DataFrame, filepath: str) -> None:
     """Save pandas DataFrame to CSV file."""
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    df.to_csv(filepath, index=False)
+    df.to_csv(filepath, index=False, encoding="utf-8")

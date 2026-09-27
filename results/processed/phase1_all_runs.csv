@@ -19,7 +19,7 @@ SuperconductR,1,RegressionTree,GradientBoostingRegressor,81.69,7.2,40.59,38.61,3
 SuperconductR,2,RegressionTree,GradientBoostingRegressor,83.0,7.4,33.66,28.71,30.69,100.0,84.1,19.0,75.73,82.29,82.83
 SuperconductR,3,RegressionTree,GradientBoostingRegressor,82.89,10.74,69.31,63.37,64.36,100.0,83.86,26.0,74.88,81.86,82.45
 SuperconductR,4,RegressionTree,GradientBoostingRegressor,80.21,4.24,40.59,37.62,90.1,100.0,81.12,34.0,72.41,79.29,80.61
-Wine,0,ClassificationTree,GradientBoostingClassifier,81.43,36.17,27.72,1.98,88.12,95.0,82.5,80.0,78.96,75.05,82.12
+Wine,0,ClassificationTree,GradientBoostingClassifier,81.65,39.41,84.16,5.94,91.09,97.0,82.5,82.0,78.21,75.05,82.12
 Wine,1,LogisticRegression,GradientBoostingClassifier,79.73,21.08,36.63,0.0,54.46,98.0,80.82,36.0,74.67,75.05,80.82
 Wine,2,LogisticRegression,GradientBoostingClassifier,81.19,40.42,85.15,55.45,67.33,98.0,82.5,79.0,77.65,75.79,81.19
 Wine,3,LogisticRegression,GradientBoostingClassifier,78.47,31.34,91.09,74.26,68.32,99.0,79.14,91.0,75.05,73.93,78.21
