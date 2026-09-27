@@ -12,29 +12,29 @@
   "bb_params": {
     "learning_rate": 0.1,
     "max_depth": 4,
-    "n_estimators": 64,
-    "subsample": 0.8
+    "n_estimators": 100,
+    "subsample": 1.0
   },
   "allocator_model": "GradientBoostingRegressor",
   "metrics": {
-    "AUC": 79.07,
-    "PPCR": 3.46,
-    "PQEOM": 8.91,
-    "PQOM": 0.0,
-    "PCFA": 98.02,
+    "AUC": 79.34,
+    "PPCR": 7.43,
+    "PQEOM": 17.82,
+    "PQOM": 3.96,
+    "PCFA": 80.2,
     "95TQM": 100.0,
-    "Max_Acc": 79.25,
-    "Argmax_q": 8.0,
-    "s_Acc": 75.38,
+    "Max_Acc": 79.61,
+    "Argmax_q": 17.0,
+    "s_Acc": 75.07,
     "GB_Perf": 78.71,
-    "BB_Perf": 79.25
+    "BB_Perf": 79.52
   },
   "n_samples": 10578,
   "n_features": 7,
   "test_category_counts": {
-    "Zg": 64,
-    "Zb": 76,
-    "Z2": 1685,
-    "Z0": 397
+    "Zg": 68,
+    "Zb": 86,
+    "Z2": 1681,
+    "Z0": 387
   }
 }

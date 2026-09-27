@@ -183,8 +183,8 @@ def evaluate_eeg_ensemble(
         perf_dist_val = compute_sufficient_performance(s_gb_val, s_bb_val, alloc_dist_val)
 
         # Select allocator based on validation performance
-        # Tie-breaker: prefer feature-dependent a'_q
-        use_feat = bool(perf_feat_val >= perf_dist_val)
+        # Default ties to feature-independent a''_q unless a'_q strictly outperforms
+        use_feat = bool(perf_feat_val > perf_dist_val)
         pcfa_choices.append(1.0 if use_feat else 0.0)
 
         # Test allocations

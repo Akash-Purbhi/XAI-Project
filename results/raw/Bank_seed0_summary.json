@@ -17,24 +17,24 @@
   },
   "allocator_model": "GradientBoostingRegressor",
   "metrics": {
-    "AUC": 79.07,
-    "PPCR": 6.39,
-    "PQEOM": 92.08,
-    "PQOM": 50.5,
-    "PCFA": 6.93,
+    "AUC": 79.05,
+    "PPCR": 5.82,
+    "PQEOM": 77.23,
+    "PQOM": 46.53,
+    "PCFA": 28.71,
     "95TQM": 100.0,
-    "Max_Acc": 79.43,
-    "Argmax_q": 82.0,
-    "s_Acc": 73.67,
+    "Max_Acc": 79.52,
+    "Argmax_q": 77.0,
+    "s_Acc": 73.58,
     "GB_Perf": 78.62,
     "BB_Perf": 78.98
   },
   "n_samples": 10578,
   "n_features": 7,
   "test_category_counts": {
-    "Zg": 109,
-    "Zb": 117,
-    "Z2": 1638,
-    "Z0": 358
+    "Zg": 111,
+    "Zb": 119,
+    "Z2": 1636,
+    "Z0": 356
   }
 }

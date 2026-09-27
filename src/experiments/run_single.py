@@ -26,6 +26,7 @@ from src.utils.io import save_json, save_dataframe
 from src.data import load_dataset, make_train_val_test_splits, EEGDataPreprocessor
 from src.models import tune_and_fit_model
 from src.allocator import (
+    compute_loss,
     compute_regression_epsilon,
     compute_sufficiency_indicators,
     categorize_sufficiency,

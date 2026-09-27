@@ -10,31 +10,31 @@
   },
   "bb_model": "GradientBoostingClassifier",
   "bb_params": {
-    "learning_rate": 0.1,
-    "max_depth": 3,
+    "learning_rate": 0.05,
+    "max_depth": 6,
     "n_estimators": 100,
     "subsample": 1.0
   },
   "allocator_model": "GradientBoostingRegressor",
   "metrics": {
-    "AUC": 79.45,
-    "PPCR": 15.0,
-    "PQEOM": 3.96,
-    "PQOM": 0.0,
-    "PCFA": 83.17,
+    "AUC": 79.65,
+    "PPCR": 22.52,
+    "PQEOM": 45.54,
+    "PQOM": 7.92,
+    "PCFA": 21.78,
     "95TQM": 100.0,
-    "Max_Acc": 79.84,
-    "Argmax_q": 35.0,
-    "s_Acc": 74.3,
+    "Max_Acc": 79.88,
+    "Argmax_q": 54.0,
+    "s_Acc": 74.98,
     "GB_Perf": 77.9,
-    "BB_Perf": 79.84
+    "BB_Perf": 79.79
   },
   "n_samples": 10578,
   "n_features": 7,
   "test_category_counts": {
-    "Zg": 72,
-    "Zb": 115,
-    "Z2": 1659,
-    "Z0": 376
+    "Zg": 62,
+    "Zb": 104,
+    "Z2": 1669,
+    "Z0": 387
   }
 }

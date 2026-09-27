@@ -300,16 +300,16 @@ Below is the consolidated comparison between the numbers published in Pisztora &
 
 | Dataset | Metric | Paper Value | Replicated (Ours 5-Seed Mean ± Std) | Difference | Agreement Status |
 |:--------|:-------|:-----------:|:----------------------------------:|:----------:|:----------------:|
-| **Wine** | AUC | 79.0 | 80.6 ± 1.5 | +1.6 | High Agreement |
-| **Wine** | PPCR | 21.0 | 33.4 ± 7.6 | +12.4 | Moderate (Higher gain) |
-| **Wine** | PQEOM | 71.0 | 63.4 ± 29.1 | -7.6 | High Agreement |
+| **Wine** | AUC | 79.0 | 80.7 ± 0.8 | +1.7 | High Agreement |
+| **Wine** | PPCR | 21.0 | 33.9 ± 5.6 | +12.9 | Moderate (Higher gain) |
+| **Wine** | PQEOM | 71.0 | 63.2 ± 36.8 | -7.8 | High Agreement |
 | **Wine** | 95TQM | 98.0 | 97.4 ± 1.5 | -0.6 | High Agreement |
-| **Wine** | Max Acc | 80.0 | 81.6 ± 1.7 | +1.6 | High Agreement |
-| **Wine** | s Acc | 78.0 | 77.0 ± 2.0 | -1.0 | High Agreement |
-| **Bank** | AUC | 76.0 | 79.6 ± 0.6 | +3.6 | High Agreement |
+| **Wine** | Max Acc | 80.0 | 81.5 ± 0.9 | +1.5 | High Agreement |
+| **Wine** | s Acc | 78.0 | 76.3 ± 1.3 | -1.7 | High Agreement |
+| **Bank** | AUC | 76.0 | 79.6 ± 0.4 | +3.6 | High Agreement |
 | **Bank** | 95TQM | 100.0 | 100.0 ± 0.0 | 0.0 | Exact Match |
-| **Bank** | Max Acc | 79.0 | 79.9 ± 0.6 | +0.9 | Exact Match |
-| **Bank** | s Acc | 71.0 | 74.8 ± 0.9 | +3.8 | High Agreement |
+| **Bank** | Max Acc | 79.0 | 80.0 ± 0.4 | +1.0 | Exact Match |
+| **Bank** | s Acc | 71.0 | 74.9 ± 0.8 | +3.9 | High Agreement |
 | **PolR** | AUC | 98.0 | 88.2 ± 0.4 | -9.8 | Moderate Agreement |
 | **PolR** | PQOM | 93.0 | 96.4 ± 1.9 | +3.4 | High Agreement |
 | **PolR** | 95TQM | 100.0 | 100.0 ± 0.0 | 0.0 | Exact Match |
