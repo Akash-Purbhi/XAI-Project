@@ -118,18 +118,18 @@ All datasets are sourced from OpenML under the benchmark suite established by Gr
 | Dataset | Task | OpenML ID | Total Samples | Features | Train (70%) | Val (9%) | Test (21%) |
 |:--------|:-----|:---------:|:-------------:|:--------:|:-----------:|:--------:|:----------:|
 | **Wine** | Classification | [44091](https://www.openml.org/d/44091) | 2,554 | 11 | 1,788 | 230 | 536 |
-| **Bank** | Classification | [44126](https://www.openml.org/d/44126) | 10,578 | 7 | 7,404 | 952 | 2,222 |
+| **Bank** | Classification | [44126](https://www.openml.org/d/44126) | 10,578 | 7 | 7,405 | 952 | 2,221 |
 | **PolR** | Regression | [44133](https://www.openml.org/d/44133) | 15,000 | 26 | 10,500 | 1,350 | 3,150 |
-| **SuperconductR** | Regression | [44148](https://www.openml.org/d/44148) | 21,263 | 79 | 14,883 | 1,914 | 4,466 |
-| **BrazilianHousesR** | Regression | [44141](https://www.openml.org/d/44141) | 10,692 | 8 | 7,483 | 963 | 2,246 |
+| **SuperconductR** | Regression | [44148](https://www.openml.org/d/44148) | 21,263 | 79 | 14,884 | 1,914 | 4,465 |
+| **BrazilianHousesR** | Regression | [44141](https://www.openml.org/d/44141) | 10,692 | 8 | 7,484 | 962 | 2,246 |
 
 ### Strict Preprocessing Pipeline
 1. **Target Preprocessing:**
    - Classification: Zero-indexed integer encoding.
-   - Regression: Standardized to zero mean and unit variance ($\mu = 0, \sigma = 1$), fitted **only** on the training partition.
+   - Regression: Min-max scaled to $[-1, 1]$ using training set extrema, fitted **only** on the training partition.
 2. **Feature Preprocessing:**
-   - Numerical: Median imputation followed by standard scaling (`StandardScaler`), fitted strictly on `X_train`.
-   - Categorical: Most frequent imputation followed by `OneHotEncoder(handle_unknown='ignore')`, fitted strictly on `X_train`.
+   - Numerical: Min-max scaled to $[-1, 1]$ using per-feature training set min/max, fitted strictly on `X_train`. Zero-variance features are mapped to $0$.
+   - Categorical: Handled via OpenML's native encoding; all selected benchmark datasets contain only numerical features.
 3. **Partition Splits:**
    - 70% Train, 9% Validation, 21% Test.
    - Stratified by target for classification tasks.
@@ -194,7 +194,7 @@ XAI-Project/
 │   ├── data/
 │   │   ├── loaders.py                 <-- OpenML loaders with local fallback
 │   │   ├── splits.py                  <-- Stratified 70/9/21 partitioning
-│   │   └── preprocessing.py           <-- Leakage-free StandardScaler & Imputer
+│   │   └── preprocessing.py           <-- Leakage-free MinMax [-1,1] scaler
 │   ├── models/
 │   │   ├── glass_box.py               <-- Logistic, Linear (Lasso), Decision Trees
 │   │   ├── black_box.py               <-- Gradient Boosting & TabWRN
