@@ -49,6 +49,7 @@ def main():
     parser.add_argument('--use_gpu', action='store_true', default=True, help="Use GPU acceleration")
     parser.add_argument('--no_gpu', dest='use_gpu', action='store_false', help="Force CPU mode")
     parser.add_argument('--quick_test', action='store_true', help="Run only on Wine and Phoneme for quick testing")
+    parser.add_argument('--force', action='store_true', help="Re-run datasets even if results exist")
     args = parser.parse_args()
 
     targets = ['Wine', 'Phoneme'] if args.quick_test else args.datasets
@@ -66,7 +67,7 @@ def main():
         print(f"\n[{idx}/{len(targets)}] Starting Dataset: {ds}")
         t0 = time()
         try:
-            stab_exp.run_experiment(dataset_name=ds, use_gpu=args.use_gpu)
+            stab_exp.run_experiment(dataset_name=ds, use_gpu=args.use_gpu, force=args.force)
             elapsed = time() - t0
             completed.append((ds, elapsed))
             print(f"[OK] Completed {ds} in {elapsed:.1f}s")

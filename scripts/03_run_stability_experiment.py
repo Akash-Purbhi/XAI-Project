@@ -119,7 +119,13 @@ def train_tree_model(model_type, problem_type, use_gpu, **kwargs):
             )
 
 
-def run_experiment(dataset_name, epsilons=[0.00, 0.01, 0.02, 0.05, 0.10], test_seeds=[0, 1, 2], use_gpu=True):
+def run_experiment(dataset_name, epsilons=[0.00, 0.01, 0.02, 0.05, 0.10], test_seeds=[0, 1, 2], use_gpu=True, force=False):
+    out_dir = Path(f"results/stability/{dataset_name}")
+    summary_file = out_dir / "summary_before_vs_after.csv"
+    if summary_file.exists() and not force:
+        print(f"[SKIP] {dataset_name} results already exist at {summary_file}. (Use --force to re-run)")
+        return pd.read_csv(summary_file)
+
     print("=" * 70)
     print(f"RUNNING GAP 3 STABILITY EXPERIMENT: {dataset_name}")
     device_mode = "GPU (CUDA via XGBoost)" if (use_gpu and CUDA_AVAILABLE and XGB_AVAILABLE) else "CPU (Scikit-Learn)"
@@ -367,9 +373,10 @@ def main():
     parser.add_argument('--dataset_name', type=str, default='Wine', help="Dataset to evaluate")
     parser.add_argument('--use_gpu', action='store_true', default=True, help="Use GPU acceleration if available")
     parser.add_argument('--no_gpu', dest='use_gpu', action='store_false', help="Force CPU mode")
+    parser.add_argument('--force', action='store_true', help="Re-run even if results exist")
     args = parser.parse_args()
 
-    run_experiment(dataset_name=args.dataset_name, use_gpu=args.use_gpu)
+    run_experiment(dataset_name=args.dataset_name, use_gpu=args.use_gpu, force=args.force)
 
 
 if __name__ == "__main__":
