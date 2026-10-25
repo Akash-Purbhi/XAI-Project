@@ -43,8 +43,18 @@ def generate_tabular_perturbations(X, categorical_indicator, epsilon, seed=0, di
 
     if isinstance(X, pd.DataFrame):
         X_pert = X.copy()
-        for col in X.columns:
-            is_cat = categorical_indicator.get(col, False)
+        for idx, col in enumerate(X.columns):
+            is_cat = False
+            if isinstance(categorical_indicator, dict):
+                is_cat = categorical_indicator.get(col, False)
+            elif isinstance(categorical_indicator, (list, tuple, np.ndarray)):
+                if len(categorical_indicator) == len(X.columns):
+                    is_cat = bool(categorical_indicator[idx])
+                else:
+                    is_cat = (col in categorical_indicator)
+            elif isinstance(categorical_indicator, set):
+                is_cat = (col in categorical_indicator)
+
             if not is_cat:
                 col_vals = X[col].to_numpy(dtype=np.float32)
                 if distribution == 'uniform':
