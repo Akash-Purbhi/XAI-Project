@@ -638,7 +638,12 @@ def getPol(prefix,seed):
     return {'x_train':x_train,'x_test':x_test,'y_train':y_train,'y_test':y_test,'categorical_indicator':categorical_indicator}
 
 def getHouse16H(prefix,seed):
-    X,y = fetch_openml(data_id=44123,return_X_y=True) 
+    try:
+        X,y = fetch_openml(data_id=44123,return_X_y=True)
+    except Exception:
+        import openml
+        d = openml.datasets.get_dataset(44123)
+        X, y, _, _ = d.get_data(target=d.default_target_attribute) 
     idx = np.random.RandomState(seed=seed).permutation(X.index)
     X = X.reindex(idx)
     y = y.reindex(idx)
@@ -758,7 +763,12 @@ def getCredit(prefix,seed):
     return {'x_train':x_train,'x_test':x_test,'y_train':y_train,'y_test':y_test,'categorical_indicator':categorical_indicator}
 
 def getCalifornia(prefix,seed):
-    X,y = fetch_openml(data_id=44090,return_X_y=True) 
+    try:
+        X,y = fetch_openml(data_id=44090,return_X_y=True)
+    except Exception:
+        import openml
+        d = openml.datasets.get_dataset(44090)
+        X, y, _, _ = d.get_data(target=d.default_target_attribute) 
     idx = np.random.RandomState(seed=seed).permutation(X.index)
     X = X.reindex(idx)
     y = y.reindex(idx)
@@ -769,7 +779,8 @@ def getCalifornia(prefix,seed):
     n_classes = 2
     train_split_p = 0.79 #70% train, 30% of 30% = 9% is val, rest (21%) is test per Grinsztajn paper
     
-    y_flat = y.map({'True':1,'False':0})
+    mapping = {'True': 1, 'False': 0, True: 1, False: 0, 'true': 1, 'false': 0, 1: 1, 0: 0}
+    y_flat = y.map(mapping).fillna(0).astype(int)
     y = np.eye(n_classes)[y_flat].astype('float32')
     X = X.astype('float32')
     

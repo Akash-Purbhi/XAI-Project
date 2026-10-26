@@ -21,7 +21,7 @@ from utils import get_superfix_prefix_and_make_dir
 from data import get_dataset
 
 DEFAULT_DATASETS = [
-    # Classification
+    # 12 Classification Datasets
     'Wine',
     'Phoneme',
     'KDDIPUMS',
@@ -30,11 +30,23 @@ DEFAULT_DATASETS = [
     'Bank',
     'MagicTelescope',
     'Credit',
-    # Regression
+    'House16H',
+    'California',
+    'Electricity',
+    'Jannis',
+    # 12 Regression Datasets
     'Wine_R',
     'CPU_R',
     'Isolet_R',
-    'BrazilianHouses_R'
+    'BrazilianHouses_R',
+    'Sulfur_R',
+    'Ailerons_R',
+    'MiamiHousing_R',
+    'Pol_R',
+    'Elevators_R',
+    'BikeSharingDemand_R',
+    'Fifa_R',
+    'California_R'
 ]
 
 def prepare_dataset(dataset_name, run_machine='local', n_splits=4, force=False):

@@ -7,11 +7,11 @@
 
 ---
 
-## 1. Selected Datasets (Sweet Spot: 10–12 Small-to-Medium Datasets)
+## 1. Selected Datasets (24 Datasets: 12 Classification + 12 Regression)
 
 Out of the 35 benchmark datasets in the repository, we avoid the massive datasets (Covertype with 566k, Higgs with 940k, NYCTaxi with 581k) to prevent multi-hour bottlenecks and memory exhaustion while ensuring robust statistical diversity.
 
-### 1.1 Classification Datasets (8 Datasets)
+### 1.1 Classification Datasets (12 Datasets)
 | # | Dataset | Samples | Features | Domain | Why Selected |
 |---|---|---|---|---|---|
 | 1 | **Wine** | 2,554 | 11 | Chemical / Quality | Fast baseline, existing test bench |
@@ -22,16 +22,28 @@ Out of the 35 benchmark datasets in the repository, we avoid the massive dataset
 | 6 | **Bank** | 10,578 | 16 | Marketing / Finance | Tabular financial data, real-world relevance |
 | 7 | **MagicTelescope**| 13,376 | 10 | High Energy Physics | Clean numeric features, standard ML benchmark |
 | 8 | **Credit** | 16,714 | 10 | Financial Risk | Class imbalance handling, sensitive boundaries |
+| 9 | **House16H** | 13,488 | 16 | Real Estate | Housing pricing binary classification |
+| 10 | **California** | 20,634 | 8 | Demographics | Classic California census benchmark |
+| 11 | **Electricity** | 38,474 | 8 | Energy / Markets | Australian energy price surge classification |
+| 12 | **Jannis** | 57,580 | 54 | Physics | Scientific sensor tracking & particle detection |
 
-### 1.2 Regression Datasets (4 Datasets)
+### 1.2 Regression Datasets (12 Datasets)
 | # | Dataset | Samples | Features | Domain | Why Selected |
 |---|---|---|---|---|---|
-| 9 | **Wine_R** | 6,497 | 11 | Physicochemical | Direct regression analog to Wine classification |
-| 10 | **CPU_R** | 8,192 | 12 | Computer Hardware | Low sample variance, clear functional relationships |
-| 11 | **Isolet_R** | 7,797 | 617 | Audio / Speech | Very high-dimensional tabular feature space |
-| 12 | **BrazilianHouses_R** | 10,692 | 12 | Real Estate Economics | Real-world price prediction with skew |
+| 13 | **Wine_R** | 6,497 | 11 | Physicochemical | Direct regression analog to Wine classification |
+| 14 | **CPU_R** | 8,192 | 12 | Computer Hardware | Low sample variance, clear functional relationships |
+| 15 | **Isolet_R** | 7,797 | 617 | Audio / Speech | Very high-dimensional tabular feature space |
+| 16 | **BrazilianHouses_R** | 10,692 | 12 | Real Estate Economics | Real-world price prediction with skew |
+| 17 | **Sulfur_R** | 10,081 | 6 | Industrial | Chemical process recovery & sulfur yield |
+| 18 | **Ailerons_R** | 13,750 | 40 | Aerospace | Aircraft control & flight telemetry |
+| 19 | **MiamiHousing_R**| 13,932 | 16 | Economics | Miami real estate price prediction |
+| 20 | **Pol_R** | 15,000 | 26 | Telecom | Continuous telecommunication signals |
+| 21 | **Elevators_R** | 16,599 | 18 | Aerospace | F-16 flight control surfaces tracking |
+| 22 | **BikeSharingDemand_R**| 17,379 | 12 | Urban Mobility | Hourly public bike sharing demand |
+| 23 | **Fifa_R** | 18,063 | 34 | Sports Analytics | Player transfer market valuations |
+| 24 | **California_R** | 20,640 | 8 | Real Estate | Median house value continuous prediction |
 
-> **Total Scope:** 12 datasets (8 classification + 4 regression), ~100k total samples across tabular domains.
+> **Total Scope:** 24 datasets (12 classification + 12 regression), ~380k total samples across tabular domains.
 
 ---
 
@@ -55,7 +67,7 @@ For each perturbation magnitude $\epsilon \in \{0.00, 0.01, 0.02, 0.05, 0.10\}$ 
 ### 2.3 Step-by-Step Execution Workflow
 ```mermaid
 flowchart TD
-    A["Selected Datasets (12)"] --> B["Step 1: Run Component Baselines (Glass-Box & Black-Box)"]
+    A["Selected Datasets (24: 12 Cls + 12 Reg)"] --> B["Step 1: Run Component Baselines (Glass-Box & Black-Box)"]
     B --> C["Step 2: Train Standard Allocator vs. SR-EEG Allocator"]
     C --> D["Step 3: Noise Injection (ε ∈ {0, 0.01, 0.02, 0.05, 0.10})"]
     D --> E["Step 4: Compute AFR, PC, PRR, BAG across Seeds {0, 1, 2}"]
@@ -63,22 +75,19 @@ flowchart TD
 ```
 
 #### Detailed Tasks:
-- [ ] **Task 3.1: Environment & Baseline Verification**
-  - Verify Python dependencies (`numpy`, `pandas`, `scikit-learn`, `torch`, `matplotlib`, `seaborn`).
-  - Run a smoke test on `Wine` and `Phoneme` with existing `experiment_stability.py` to confirm baseline output integrity.
-- [ ] **Task 3.2: Generalize and Extend `experiment_stability.py`**
-  - Support command-line `--dataset_name` dynamically.
-  - Implement regression support:
-    - Extend perturbation loop to handle continuous targets using MSE / RMSE loss differences.
-    - Define continuous prediction consistency (e.g., $|\hat{y} - \hat{y}_{\text{noisy}}| \le \tau \cdot \sigma_y$).
-  - Allow batch execution via a script runner (`run_all_stability.py`).
-- [ ] **Task 3.3: Batch Execution Across All 12 Datasets**
-  - Run experiments across seeds $0, 1, 2$ to capture error bars / standard deviations.
-  - Store results systematically in `results/stability/<dataset_name>/summary.csv`.
-- [ ] **Task 3.4: Cross-Dataset Aggregation & Plotting**
-  - Plot **AFR vs. $\epsilon$** curve comparing Standard EEG vs. SR-EEG across all 12 datasets.
-  - Plot **Performance Trade-off** (Ensemble Accuracy vs. Robustness).
-  - Export a consolidated summary table formatted for research paper publication.
+- [x] **Task 3.1: Environment & Baseline Verification** (Completed)
+  - Verified Python dependencies (`numpy`, `pandas`, `scikit-learn`, `torch`, `matplotlib`, `seaborn`, `xgboost`).
+  - RTX 3050 CUDA GPU acceleration verified and operational.
+- [x] **Task 3.2: Generalize and Extend Stability Suite** (Completed)
+  - Created modular scripts `01_verify_environment.py` through `05_run_gap3_benchmark.py`.
+  - Added full regression support (MSE/RMSE losses, continuous predictions, and delta shifts).
+- [x] **Task 3.3: Batch Execution Across All 24 Datasets** (Completed)
+  - Ran experiments across seeds $0, 1, 2$ and 5 perturbation noise levels ($\epsilon \in \{0, 0.01, 0.02, 0.05, 0.10\}$).
+  - Saved individual CSVs and figures in `results/stability/<dataset_name>/`.
+- [x] **Task 3.4: Cross-Dataset Aggregation & Plotting** (Completed)
+  - Generated master dataset CSV (`results/stability_master.csv`, 6,480 rows).
+  - Generated multi-panel cross-dataset stability figures (`results/figures/gap3_cross_dataset_stability.png`).
+  - Documented complete findings in `PHASE2_RESULTS_GAP3.md`.
 
 ---
 
@@ -131,19 +140,19 @@ flowchart TD
 
 | Artifact / Deliverable | Target Location | Description |
 |---|---|---|
-| **Phase 1 Plan Document** | `EXECUTION_PLAN_GAP3_GAP6.md` | Detailed roadmap for Gap 3 and Gap 6 |
-| **Modular Stability Engine** | `experiment_stability.py` / `run_all_stability.py` | CLI-enabled, multi-dataset, regression-capable stability benchmark |
-| **Stability Benchmark Data** | `results/stability_master.csv` | Full metric results across 12 datasets, 5 noise levels, 3 seeds |
-| **Stability Visualizations** | `figures/stability_cross_dataset.png` | Publication-ready multi-panel stability curves |
-| **SHAP Allocator Analyzer** | `analyze_allocator_shap.py` | Script for TreeExplainer computation and plot generation |
-| **SHAP Visualizations** | `figures/shap/<dataset>/` | Beeswarm, waterfall, and shift comparison plots |
+| **Phase 1 Plan Document** | `EXECUTION_PLAN_GAP3_GAP6.md` | Detailed roadmap for Gap 3 (24 datasets) and Gap 6 |
+| **Modular Stability Engine** | `scripts/01` to `scripts/05` | GPU-enabled, 24-dataset, regression-capable stability benchmark |
+| **Stability Benchmark Data** | `results/stability_master.csv` | Full metric results across 24 datasets (6,480 runs), 5 noise levels, 3 seeds |
+| **Stability Visualizations** | `results/figures/gap3_cross_dataset_stability.png` | Publication-ready multi-panel stability curves |
+| **SHAP Allocator Analyzer** | `scripts/06_analyze_allocator_shap.py` | Script for TreeExplainer computation and plot generation |
+| **SHAP Visualizations** | `results/shap/<dataset>/` | Beeswarm, waterfall, and shift comparison plots |
 | **Final Synthesis Report** | `FINAL_PHASE2_RESEARCH_FINDINGS.md` | Comprehensive research paper style writeup with tables, figures, and insights |
 
 ---
 
-## 5. Execution Timeline & Next Action
+## 5. Execution Timeline & Status
 
-1. **Step 1:** Confirm the 12 selected datasets and metric definitions.
-2. **Step 2:** Execute Gap 3 smoke-test on `Wine` and `Phoneme`, then launch batch runs on all selected datasets.
-3. **Step 3:** Implement and execute Gap 6 SHAP analysis on the resulting allocators.
+1. **Step 1:** Confirm the 24 selected datasets and metric definitions. [COMPLETED]
+2. **Step 2:** Execute Gap 3 benchmark across all 24 datasets on RTX 3050 GPU. [COMPLETED]
+3. **Step 3:** Implement and execute Gap 6 SHAP analysis on the resulting allocators. [NEXT STEP]
 4. **Step 4:** Generate all final figures and wrap up the report.

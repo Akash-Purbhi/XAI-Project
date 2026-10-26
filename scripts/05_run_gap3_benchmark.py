@@ -27,7 +27,7 @@ agg_exp = importlib.util.module_from_spec(spec4)
 spec4.loader.exec_module(agg_exp)
 
 DEFAULT_DATASETS = [
-    # Baseline Classification Datasets
+    # 12 Classification Datasets
     'Wine',
     'Phoneme',
     'KDDIPUMS',
@@ -36,11 +36,23 @@ DEFAULT_DATASETS = [
     'Bank',
     'MagicTelescope',
     'Credit',
-    # Regression Datasets
+    'House16H',
+    'California',
+    'Electricity',
+    'Jannis',
+    # 12 Regression Datasets
     'Wine_R',
     'CPU_R',
     'Isolet_R',
-    'BrazilianHouses_R'
+    'BrazilianHouses_R',
+    'Sulfur_R',
+    'Ailerons_R',
+    'MiamiHousing_R',
+    'Pol_R',
+    'Elevators_R',
+    'BikeSharingDemand_R',
+    'Fifa_R',
+    'California_R'
 ]
 
 def main():
