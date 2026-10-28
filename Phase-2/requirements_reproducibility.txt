@@ -1,0 +1,43 @@
+# Reproducibility Requirements & Environment Specification
+# Project: Robustness of Explainable Model Allocation under Input Perturbations (EEG Extension)
+# Python Version: 3.8.8 (Conda Environment: env_eeg)
+# Platform: Windows 10/11 / x86_64
+
+# Core Dependencies:
+numpy==1.19.2
+scipy==1.6.2
+scikit-learn==1.0.2
+pandas==1.2.4
+tensorflow==2.3.0
+matplotlib==3.3.4
+tqdm==4.61.2
+requests==2.25.1
+
+# Dataset Link & Source:
+# OpenML Benchmark (Grinsztajn et al., NeurIPS 2022)
+# Wine Classification: OpenML Data ID 44091 (https://www.openml.org/d/44091)
+# Wine Regression: OpenML Data ID 44090 (https://www.openml.org/d/44090)
+# Phoneme Classification: OpenML Data ID 44127 (https://www.openml.org/d/44127)
+
+# Random Seeds:
+# Data Split Seed: seed=1 (train: 70%, val: 9%, test: 21%)
+# Component Model CV Seed: seed=0
+# Perturbation Stress Test Seeds: seed in [0, 1, 2]
+
+# Exact Reproduction Commands:
+# 1. Step 1 (Data Loading & Partitioning):
+#    conda run -n env_eeg python pipeline_step_1.py --run_machine=local --n_splits=4 --split_type=kfold --dataset_name=Wine
+# 2. Step 2 (Component Model Training):
+#    conda run -n env_eeg python pipeline_step_2.py --run_machine=local --model_type=logistic_regression --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
+#    conda run -n env_eeg python pipeline_step_2.py --run_machine=local --model_type=gradient_boosting_trees_classifier --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
+# 3. Step 3 (Loss Calculation):
+#    conda run -n env_eeg python pipeline_step_3.py --run_machine=local --dataset_name=Wine
+# 4. Step 4 (Original Allocator Training):
+#    conda run -n env_eeg python pipeline_step_4.py --run_machine=local --r_cutoff_type=val --hyper_set=large --rank_type=bb_minus_gb --feat_type=all --dist_type=cemse --rep=0 --dataset_name=Wine --allocator_type=gradient_boosting_trees_regressor
+# 5. Baseline Evaluation:
+#    conda run -n env_eeg python evaluate_baseline_wine.py
+# 6. Controlled Before-vs-After Experiment (Original vs SR-EEG across epsilons and seeds):
+#    conda run -n env_eeg python experiment_stability.py --dataset_name=Wine
+#    conda run -n env_eeg python experiment_stability.py --dataset_name=Phoneme
+# 7. Render Multi-Panel Comparative Figures:
+#    conda run -n env_eeg python generate_combined_figures.py

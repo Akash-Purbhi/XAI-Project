@@ -1,0 +1,2 @@
+Dataset,Problem_Type,Original_Domain_Feature_Share,Original_Disagreement_Confidence_Share,SREEG_Domain_Feature_Share,SREEG_Disagreement_Confidence_Share,Top_Driver_1,Top_Driver_2,Top_Driver_3
+Sulfur_R,regression,22.112074219944876,77.88792578005513,17.1642210340001,82.8357789659999,Disagreement_MSE,Disagreement_AbsDiff,y2
