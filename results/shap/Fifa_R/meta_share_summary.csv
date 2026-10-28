@@ -1,0 +1,2 @@
+Dataset,Problem_Type,Original_Domain_Feature_Share,Original_Disagreement_Confidence_Share,SREEG_Domain_Feature_Share,SREEG_Disagreement_Confidence_Share,Top_Driver_1,Top_Driver_2,Top_Driver_3
+Fifa_R,regression,19.94641415469816,80.05358584530184,27.178509882583867,72.82149011741613,Disagreement_MSE,Disagreement_AbsDiff,release_clause_eur
