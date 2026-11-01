@@ -22,11 +22,20 @@ This repository contains the official code for the AAAI 2024 paper **"Learning P
 ---
 
 ## Deliverables & Documentation
-- [PHASE2_RESEARCH_GAP.md](file:///d:/python%20college/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/PHASE2_RESEARCH_GAP.md): Full research motivation, literature comparison table, hypotheses, mathematical formulation, and experimental design.
-- [PHASE2_RESULTS.md](file:///d:/python%20college/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/PHASE2_RESULTS.md): Detailed experimental report, published Table 2 references, locally reproduced baseline, perturbation audit, before-vs-after tables, and analysis.
-- [PHASE2_ONE_PAGE_SUMMARY.md](file:///d:/python%20college/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/PHASE2_ONE_PAGE_SUMMARY.md): One-page summary required by the course guidelines.
-- [AI_USAGE.md](file:///d:/python%20college/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/AI_USAGE.md): Full AI disclosure detailing tool usage, prompts, and human validation.
-- [requirements_reproducibility.txt](file:///d:/python%20college/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/Learning-Performance-Maximizing-Ensembles-with-Explainability-Guarantees-main/requirements_reproducibility.txt): Exact Python package versions, seeds, dataset IDs, and execution commands.
+
+### Cost-Aware Allocation Extension (New Work):
+- [COST_AWARE_RESEARCH_GAP.md](COST_AWARE_RESEARCH_GAP.md): Research motivation, pre-routing execution flaw, BranchyNet comparison, mathematical formulation, and hypotheses.
+- [COST_AWARE_IMPLEMENTATION.md](COST_AWARE_IMPLEMENTATION.md): Modular architecture, decoupled $X$-only gate, conditional execution engine, and test-suite documentation.
+- [COST_AWARE_RESULTS.md](COST_AWARE_RESULTS.md): Full empirical benchmark report, component latencies, matched-coverage tables, and Pareto frontier analysis.
+- [COST_AWARE_ONE_PAGE_SUMMARY.md](COST_AWARE_ONE_PAGE_SUMMARY.md): Required one-page executive summary of the cost-aware extension.
+- [results/cost_aware_extension/](results/cost_aware_extension/): Generated CSVs (`comparison_results.csv`, `inference_timing.csv`, etc.) and 300 DPI figures.
+
+### Stability-Regularized EEG Extension (SR-EEG):
+- [PHASE2_RESEARCH_GAP.md](PHASE2_RESEARCH_GAP.md): Full research motivation, literature comparison table, hypotheses, mathematical formulation, and experimental design.
+- [PHASE2_RESULTS.md](PHASE2_RESULTS.md): Detailed experimental report, published Table 2 references, locally reproduced baseline, perturbation audit, before-vs-after tables, and analysis.
+- [PHASE2_ONE_PAGE_SUMMARY.md](PHASE2_ONE_PAGE_SUMMARY.md): One-page summary required by the course guidelines.
+- [AI_USAGE.md](AI_USAGE.md): Full AI disclosure detailing tool usage, prompts, and human validation.
+- [requirements_reproducibility.txt](requirements_reproducibility.txt): Exact Python package versions, seeds, dataset IDs, and execution commands.
 
 ---
 
@@ -119,9 +128,33 @@ conda run -n env_eeg python experiment_stability.py --dataset_name=Phoneme
 conda run -n env_eeg python generate_combined_figures.py
 ```
 
+### 4. Cost-Aware Allocation Execution Commands (New Work)
+```bash
+# 1. Run inference latency benchmark
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 benchmark_inference_timing.py
+
+# 2. Run unit test suites (allocator, thresholding, and metrics)
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 test_cost_aware_allocator.py
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 test_threshold_selection.py
+
+# 3. Run controlled experimental evaluation across seeds [0, 1, 2] and quotas [0.2, 0.4, 0.6, 0.8]
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 experiment_cost_aware.py --seeds 0 1 2 --q_targets 0.20 0.40 0.60 0.80
+
+# 4. Generate all CSV deliverables, comparison tables, and 300 DPI publication figures
+/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 generate_cost_aware_results.py
+```
+
 ---
 
 ## Key Experimental Results Summary
+
+### Cost-Aware EEG vs. Original EEG (Wine Dataset, Mean over Seeds [0, 1, 2]):
+| Target Quota ($q$) | Original EEG Accuracy | Cost-Aware EEG Accuracy | Original Latency ($N=537$) | Cost-Aware Latency ($N=537$) | Latency Reduction (%) | Realized Compute Cost Saved (%) |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **$q = 0.20$** | **81.38%** | 81.13% | 18.99 ms | **13.76 ms** | **-27.5%** | **27.9%** |
+| **$q = 0.40$** | **80.94%** | 80.45% | 18.99 ms | **11.68 ms** | **-38.5%** | **44.0%** |
+| **$q = 0.60$** | 80.45% | **80.82%** | 18.99 ms | **9.43 ms** | **-50.3%** | **60.6%** |
+| **$q = 0.80$** | **80.57%** | 78.27% | 18.99 ms | **7.56 ms** | **-60.2%** | **73.5%** |
 
 ### Controlled Comparison at $q = 0.50$ (Wine Dataset):
 | Perturbation ($\epsilon$) | Method | Allocation Flip Rate (AFR, %) | Relative Reduction | Perturbed Accuracy (%) |

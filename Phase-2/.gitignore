@@ -37,6 +37,27 @@ ENV/
 *.swp
 *.swo
 
+# OS files
+.DS_Store
+._*
+Thumbs.db
+
+# Logs & pipeline outputs
+*.log
+pipeline_step_*_outputs.txt
+
+# PyTest & Cache
+.pytest_cache/
+.coverage
+htmlcov/
+.cache/
+.matplotlib/
+
+# Model checkpoints / binary dumps
+*.h5
+*.ckpt
+*.joblib
+
 # Antigravity & Scratch
 .system_generated/
 scratch/

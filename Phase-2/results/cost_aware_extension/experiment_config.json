@@ -1,0 +1,76 @@
+{
+    "dataset": "Wine",
+    "openml_id": 44091,
+    "task_type": "binary_classification",
+    "n_classes": 2,
+    "replicate_seeds": [
+        0,
+        1,
+        2
+    ],
+    "matched_q_targets": [
+        0.2,
+        0.4,
+        0.6,
+        0.8
+    ],
+    "cost_lambdas": [
+        0.0,
+        0.1,
+        1.0
+    ],
+    "cost_gb": 1.0,
+    "cost_bb": 10.0,
+    "timing_repetitions": 30,
+    "component_models": {
+        "glass_box": {
+            "model": "LogisticRegression",
+            "params": {
+                "C": 2.0,
+                "penalty": "l1",
+                "solver": "saga",
+                "max_iter": 5000
+            }
+        },
+        "black_box": {
+            "model": "GradientBoostingClassifier",
+            "params": {
+                "learning_rate": 0.01,
+                "max_depth": 8,
+                "n_estimators": 512,
+                "subsample": 0.8
+            }
+        }
+    },
+    "allocator_models": {
+        "original_eeg": {
+            "model": "GradientBoostingRegressor",
+            "features": "X_alloc [X, y_hat_gb, y_hat_bb, d_ce, d_mse] (15 features)",
+            "params": {
+                "learning_rate": 0.01,
+                "max_depth": 6,
+                "n_estimators": 400,
+                "subsample": 0.5
+            }
+        },
+        "cost_aware_eeg": {
+            "model": "CostAwareAllocator (GradientBoostingRegressor)",
+            "features": "X strictly (11 features)",
+            "params": {
+                "learning_rate": 0.01,
+                "max_depth": 5,
+                "n_estimators": 400,
+                "subsample": 0.8
+            }
+        }
+    },
+    "environment": {
+        "platform": "macOS-26.6.2-arm64-arm-64bit",
+        "processor": "arm",
+        "machine": "arm64",
+        "python_version": "3.12.5",
+        "numpy_version": "2.2.1",
+        "sklearn_version": "1.6.1",
+        "pandas_version": "2.2.3"
+    }
+}
