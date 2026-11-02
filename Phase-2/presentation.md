@@ -27,28 +27,35 @@
 
 ```mermaid
 flowchart TD
-    A[Input observation x] --> B[Prepare features]
-    B --> C[Train glass-box and black-box models]
-    C --> D[Compute losses, predictions, and EEG ranking]
-    D --> E[Original EEG allocator]
-    E --> F[SR-EEG stability training]
-    E --> G[TreeSHAP meta-explainability]
-    B --> H[Cost-aware raw-X gate]
-    F --> I[Robust routing decision]
-    G --> J[Explain routing drivers]
-    H --> K[Conditional model execution]
-    I --> L[Evaluate AFR, consistency, and accuracy]
-    K --> M[Evaluate coverage, latency, and compute savings]
-    J --> N[Compare disagreement and domain-feature importance]
+    A[Input data] --> B[Original EEG pipeline]
+    B --> C[SR-EEG robustness]
+    B --> D[SHAP meta-explainability]
+    B --> E[Cost-aware allocation]
+    C --> F[Stable routing]
+    D --> G[Explain routing drivers]
+    E --> H[Conditional model execution]
+    F --> I[AFR, consistency, accuracy]
+    G --> J[Feature attribution results]
+    H --> K[Coverage, latency, compute savings]
 ```
 
-The flow follows the Phase-2 pipeline: train the original EEG components, extend the allocator for stability, explain its decisions with SHAP, and use a raw-input gate for cost-aware conditional execution.
+The simple flow shows the baseline EEG pipeline followed by the three Phase-2 contributions: robust routing, allocator explanation, and cost-aware execution.
+
+## Simple presentation message
+
+Use this one sentence to explain the entire project:
+
+> **The original EEG method chooses between an explainable model and a powerful model. We improved it in three ways: we made routing more stable with SR-EEG, explained the routing decision with SHAP, and reduced unnecessary computation with cost-aware allocation.**
+
+The detailed equations and tables below provide evidence. During the video, explain the idea first and show the technical detail only when it supports the point.
 
 # 1. Introduction
 
 ## 1.1 Original paper
 
 The original paper, *Learning Performance Maximizing Ensembles with Explainability Guarantees*, was written by **Vincent Pisztora and Jia Li** and published at **AAAI 2024**.
+
+**Simple explanation:** The paper combines two models. One model is easy to understand, and the other is more powerful. EEG decides which model should handle each individual sample.
 
 The paper introduces **Ensembles with Explainability Guarantees (EEG)**. The central idea is to combine:
 
@@ -72,6 +79,8 @@ The original method asks:
 > For a required fraction \(q\) of explainable predictions, which observations should be assigned to the glass-box model and which should be assigned to the black-box model?
 
 ## 1.3 How EEG performs allocation
+
+**Simple explanation:** EEG first estimates which model is better for each sample. Then an allocator uses that information to send easy samples to the glass-box model and difficult samples to the black-box model, while trying to satisfy the required explainability percentage \(q\).
 
 For every training observation \(z_i=(x_i,y_i)\), EEG estimates whether the glass-box or black-box model is sufficient. These observations are placed into four conceptual groups:
 
@@ -105,6 +114,8 @@ where:
 
 ## 1.4 Original research objective
 
+**What we want from the original method:** achieve good accuracy while ensuring that at least the requested fraction of predictions is handled by the explainable model.
+
 The original paper aims to maximize predictive performance while satisfying an explainability constraint. Its reported cross-dataset findings include:
 
 | Published metric | Meaning | Published result |
@@ -131,6 +142,8 @@ This reproduction established that the original implementation was a suitable ba
 ---
 
 # 2. Research Gap
+
+**Simple explanation:** The original method works on clean data, but it does not answer three practical questions: will the routing stay the same after small noise, can we explain the allocator, and does the system actually save computation?
 
 ## 2.1 Identified limitations and extension opportunities
 
@@ -169,13 +182,19 @@ This project studies that robustness gap together with two related extension opp
 
 ### Gap 1: Allocation robustness
 
+**In simple words:** A tiny change in a feature can make the sample switch models. We test this using controlled perturbations and reduce the switches using SR-EEG.
+
 The original paper reports predictive performance and explainability coverage on clean inputs, but does not measure allocation flip rate, prediction consistency, or accuracy after realistic feature perturbations. We selected this gap because a routing decision that changes after negligible measurement noise can change both the prediction model and the explanation available to the user.
 
 ### Gap 2: Missing meta-explainability
 
+**In simple words:** EEG is supposed to support explainability, but the allocator itself is difficult to understand. SHAP tells us which features and disagreement signals influenced its routing decision.
+
 EEG routes observations to a glass-box model for interpretability, but its allocator is itself a complex Gradient Boosting Regressor. The original method does not explain which raw features, model outputs, or disagreement measures cause a sample to be routed to the glass-box or black-box model. We selected this gap because an explainable ensemble is incomplete if the decision that controls explainability cannot itself be interpreted.
 
 ### Gap 3: Missing computational-cost awareness
+
+**In simple words:** If the black-box model runs before routing, we do not really save computation. The cost-aware version makes the routing decision from the raw input first, then runs only the selected model.
 
 The original allocator uses model-derived features, including black-box predictions and disagreement scores. Therefore, the expensive black-box model may need to run before the routing decision, reducing or eliminating the expected computational benefit of routing some samples to the glass-box model. We selected this gap because practical deployment requires the ensemble to consider latency and resource usage in addition to predictive performance and explainability coverage.
 
@@ -231,11 +250,17 @@ All three extensions are implemented or experimentally evaluated in Phase 2. SR-
 
 # 3. Proposed Improvement
 
+**Simple explanation of the three improvements:**
+
+1. **SR-EEG:** train the allocator with small noisy versions of the same sample so its decision is less sensitive.
+2. **SHAP:** explain why the allocator selected the glass-box or black-box model.
+3. **Cost-aware EEG:** decide the route using only the original features and execute only the selected model.
+
 ## 3.1 Stability-Regularized EEG
 
 We propose **Stability-Regularized EEG (SR-EEG)**.
 
-The original allocator minimizes:
+The original allocator learns to predict the ranking \(r(z)\). In simple terms, it learns which samples are better handled by the glass-box model:
 
 $$
 \mathcal{L}_{\mathrm{orig}}(\theta)=
@@ -244,7 +269,7 @@ $$
 (A_\theta(\Phi(x_i))-r(z_i))^2
 $$
 
-SR-EEG adds a local-neighborhood consistency term:
+SR-EEG adds a consistency term. It gives the same target to a clean sample and a slightly perturbed version, encouraging the allocator to make the same decision nearby:
 
 $$
 \mathcal{L}_{\mathrm{SR}}(\theta)=
@@ -270,6 +295,8 @@ The clean and perturbed versions of an observation use the same target ranking \
 ## 3.2 Meta-explainability via SHAP
 
 ### The core paradox: who explains the explainer?
+
+**Simple explanation:** SHAP answers, “Which features pushed this sample toward the glass-box or black-box route?” We group the explanations into model disagreement signals and original domain features.
 
 EEG routes observations to a glass-box model to provide explainable predictions, but the allocator that makes this routing decision is itself a complex Gradient Boosting Regressor. Without an explanation of the allocator, the system is only partially interpretable.
 
@@ -334,6 +361,8 @@ The perturbation term therefore acts as a smoothness penalty. It discourages sha
 
 ## 3.6 Cost-aware allocation
 
+**Simple explanation:** The cost-aware gate looks only at \(X\), predicts which route is appropriate, and calls only that model. It does not run both models first.
+
 SR-EEG focuses on robustness, but a deployed ensemble may also have unequal prediction and explanation costs. For example, a black-box model may require more computation, while generating a post-hoc explanation may add latency. A practical allocator should therefore optimize more than accuracy alone.
 
 The original EEG allocator uses model-derived features, including black-box predictions and disagreement scores. Consequently, the expensive black-box model may be executed before the routing decision is made. This pre-routing execution can eliminate the computational benefit of sending a sample to the glass-box model.
@@ -389,26 +418,45 @@ The cost term can represent inference time, memory, energy, explanation latency,
 
 # 4. Implementation and Experimental Method
 
+**Implementation in one sentence:** We kept the original EEG pipeline, added perturbation training for SR-EEG, added TreeSHAP analysis for the allocator, and added a raw-input gate with conditional execution for cost-aware EEG.
+
 ## 4.1 Implementation structure
 
 The extension was implemented around the original EEG pipeline:
 
-| File | Role |
+### Original EEG pipeline
+
+| Code reference | Presentation role |
 |---|---|
-| [`pipeline_step_1.py`](./pipeline_step_1.py) | Dataset preparation and cross-validation splits |
-| [`pipeline_step_2.py`](./pipeline_step_2.py) | Glass-box and black-box model training |
-| [`pipeline_step_3.py`](./pipeline_step_3.py) | Observation-level loss and sufficiency calculations |
-| [`pipeline_step_4.py`](./pipeline_step_4.py) | Original EEG allocator training |
-| [`experiment_stability.py`](./experiment_stability.py) | Controlled before-versus-after perturbation experiment |
-| [`perturbation_utils.py`](./perturbation_utils.py) | Scale-aware perturbations for tabular features |
-| [`evaluate_eeg.py`](./evaluate_eeg.py) | Evaluation metrics including AFR and prediction consistency |
-| [`scripts/03_run_stability_experiment.py`](./scripts/03_run_stability_experiment.py) | Cross-dataset stability benchmark |
-| [`scripts/06_analyze_allocator_shap.py`](./scripts/06_analyze_allocator_shap.py) | SHAP analysis of allocator decisions |
-| [`cost_aware_allocator.py`](./cost_aware_allocator.py) | Raw-input allocator and conditional execution engine |
-| [`threshold_selection.py`](./threshold_selection.py) | Matched-coverage and cost-performance threshold selection |
-| [`experiment_cost_aware.py`](./experiment_cost_aware.py) | Multi-seed cost-aware experiment runner |
-| [`benchmark_inference_timing.py`](./benchmark_inference_timing.py) | Inference latency measurement |
-| [`test_cost_aware_allocator.py`](./test_cost_aware_allocator.py) and [`test_threshold_selection.py`](./test_threshold_selection.py) | Cost-aware unit tests |
+| [`pipeline_step_1.py`](./pipeline_step_1.py) | Prepares datasets and cross-validation splits |
+| [`pipeline_step_2.py`](./pipeline_step_2.py) | Trains the glass-box and black-box models |
+| [`pipeline_step_3.py`](./pipeline_step_3.py) | Computes observation-level losses and sufficiency |
+| [`pipeline_step_4.py`](./pipeline_step_4.py) | Trains the original EEG allocator |
+
+### SR-EEG robustness implementation
+
+| Code reference | Presentation role |
+|---|---|
+| [`experiment_stability.py`](./experiment_stability.py) | Runs the controlled before-and-after perturbation experiment |
+| [`perturbation_utils.py`](./perturbation_utils.py) | Generates scale-aware feature perturbations |
+| [`evaluate_eeg.py`](./evaluate_eeg.py) | Calculates AFR, prediction consistency, and accuracy |
+| [`scripts/03_run_stability_experiment.py`](./scripts/03_run_stability_experiment.py) | Runs the cross-dataset stability benchmark |
+
+### SHAP meta-explainability implementation
+
+| Code reference | Presentation role |
+|---|---|
+| [`scripts/06_analyze_allocator_shap.py`](./scripts/06_analyze_allocator_shap.py) | Applies TreeSHAP and summarizes allocator feature importance |
+
+### Cost-aware allocation implementation
+
+| Code reference | Presentation role |
+|---|---|
+| [`cost_aware_allocator.py`](./cost_aware_allocator.py) | Implements the raw-input gate and conditional model execution |
+| [`threshold_selection.py`](./threshold_selection.py) | Selects matched-coverage and cost-performance thresholds |
+| [`experiment_cost_aware.py`](./experiment_cost_aware.py) | Runs the multi-seed cost-aware benchmark |
+| [`benchmark_inference_timing.py`](./benchmark_inference_timing.py) | Measures inference latency and cost |
+| [`test_cost_aware_allocator.py`](./test_cost_aware_allocator.py) and [`test_threshold_selection.py`](./test_threshold_selection.py) | Verify routing, thresholds, leakage prevention, and edge cases |
 
 ## 4.2 Component models
 
@@ -421,6 +469,8 @@ The extension was implemented around the original EEG pipeline:
 | Cost-aware allocator | Gradient Boosting Regressor on raw \(X\) only, 400 trees, depth 5, subsampling 0.8 |
 
 ## 4.3 Datasets
+
+**Why these datasets:** Wine and Phoneme are used for the detailed before-and-after comparison. The larger benchmark checks whether the stability pattern also appears across different tabular datasets.
 
 The controlled before-versus-after experiment used:
 
@@ -435,6 +485,8 @@ The broader robustness and meta-explainability benchmarks used **24 tabular data
 - 12 regression datasets.
 
 ## 4.4 Perturbation protocol
+
+**Simple explanation:** We add small random changes to continuous features, then check whether the route and prediction stay the same.
 
 For continuous features scaled to \([-1,1]\):
 
@@ -453,6 +505,8 @@ $$
 Three random seeds were evaluated: \(0,1,2\). Categorical indicator features were not perturbed.
 
 ## 4.5 Evaluation metrics
+
+**How to read the metrics:** Lower AFR is better, higher prediction consistency is better, higher perturbed accuracy is better, and realized \(\hat q\) should remain close to the requested explainability level.
 
 ### Allocation Flip Rate
 
@@ -502,6 +556,8 @@ The realized value should remain close to the requested target \(q\).
 
 ## 4.6 Meta-explainability implementation
 
+**Simple explanation:** We run SHAP on the allocator, not only on the glass-box or black-box predictor. This tells us what caused the routing decision.
+
 The allocator was analyzed separately from the component predictors:
 
 1. Train the original EEG and SR-EEG allocators without changing their routing targets.
@@ -514,6 +570,8 @@ This analysis explains the allocator's behavior; it does not replace the primary
 
 ## 4.7 Cost-aware implementation and verification
 
+**Simple explanation:** First train the raw-input gate, then choose its threshold on validation data, then run only the selected model and measure time and savings.
+
 The cost-aware implementation has three stages:
 
 1. Train a raw-\(X\)-only allocator using the original desirability ranking.
@@ -525,6 +583,8 @@ The implementation was verified with dedicated unit tests for routing, condition
 ---
 
 # 5. Experimental Results
+
+**How to present the results:** First show that original EEG is unstable. Then show that SR-EEG reduces flips. Next explain that SHAP identifies disagreement as the main routing signal. Finally show that cost-aware EEG reduces latency and computation.
 
 ## 5.1 Main result: Wine at \(q=0.50\)
 
@@ -542,6 +602,8 @@ The implementation was verified with dedicated unit tests for routing, condition
 | 0.10 | **SR-EEG** | **17.69 ± 0.81** | **36.7%** | **83.12 ± 0.65** | **74.92 ± 0.65** |
 
 ### Interpretation
+
+**Main message:** SR-EEG makes routing more stable without sacrificing useful predictive performance.
 
 1. The original allocator is fragile: at \(\epsilon=0.02\), **8.07%** of Wine observations change their assigned model.
 2. At \(\epsilon=0.10\), the original flip rate increases to **27.93%**, meaning more than one in four observations changes route.
@@ -635,6 +697,8 @@ The extended benchmark covers 24 datasets and 6,480 full test trials across pert
 
 ## 5.5 Meta-explainability: explaining the allocator
 
+**Main message:** The allocator mostly routes samples based on how much the two component models disagree, rather than only on raw feature values.
+
 The allocator itself is a learned model. We therefore used TreeSHAP to study which features drive routing decisions.
 
 ### Cross-dataset attribution summary
@@ -678,6 +742,8 @@ The allocator itself is a learned model. We therefore used TreeSHAP to study whi
 
 ## 5.7 Cost-aware allocation results
 
+**Main message:** The cost-aware gate saves time because it avoids running the expensive black-box model when the glass-box route is selected. The small accuracy decrease at \(q=0.80\) is a visible trade-off, not hidden.
+
 The cost-aware benchmark used the Wine classification dataset, three random seeds, and strict validation-only threshold selection. The original EEG pipeline is compared with the raw-input cost-aware gate at matched target quotas.
 
 | Target \(q\) | Method | Actual coverage | Accuracy (%) | Latency (ms) | Latency reduction | Compute savings |
@@ -715,6 +781,8 @@ The cost-aware benchmark used the Wine classification dataset, three random seed
 ---
 
 # 6. Conclusion
+
+**Final explanation in simple words:** We started with a useful but fragile routing method. We made it more stable, explained why it routes samples, and made it cheaper to run.
 
 ## 6.1 Key findings
 
