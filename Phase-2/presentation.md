@@ -23,6 +23,27 @@
 
 ---
 
+## Project flowchart
+
+```mermaid
+flowchart TD
+    A[Input observation x] --> B[Prepare features]
+    B --> C[Train glass-box and black-box models]
+    C --> D[Compute losses, predictions, and EEG ranking]
+    D --> E[Original EEG allocator]
+    E --> F[SR-EEG stability training]
+    E --> G[TreeSHAP meta-explainability]
+    B --> H[Cost-aware raw-X gate]
+    F --> I[Robust routing decision]
+    G --> J[Explain routing drivers]
+    H --> K[Conditional model execution]
+    I --> L[Evaluate AFR, consistency, and accuracy]
+    K --> M[Evaluate coverage, latency, and compute savings]
+    J --> N[Compare disagreement and domain-feature importance]
+```
+
+The flow follows the Phase-2 pipeline: train the original EEG components, extend the allocator for stability, explain its decisions with SHAP, and use a raw-input gate for cost-aware conditional execution.
+
 # 1. Introduction
 
 ## 1.1 Original paper
@@ -64,7 +85,7 @@ For every training observation \(z_i=(x_i,y_i)\), EEG estimates whether the glas
 EEG converts this information into a desirability ranking:
 
 $$
-\tilde r(z)=2s_g(z)-s_b(z)-\sigma\left(l_U(g(x),y)-l_U(b(x),y)\right)
+\tilde r(z)=2s_g(z)-s_b(z)-\sigma(l_U(g(x),y)-l_U(b(x),y))
 $$
 
 The ranking is normalized to \(r(z)\in[0,1]\). An allocator \(A\) is trained to predict this ranking from the original features and model-derived features.
@@ -72,7 +93,7 @@ The ranking is normalized to \(r(z)\in[0,1]\). An allocator \(A\) is trained to 
 The feature-dependent allocation rule is:
 
 $$
-a'_q(x)=\mathbb{I}\left\{A(\Phi(x))>1-q\right\}
+a'_q(x)=\mathbb{I}\{A(\Phi(x))>1-q\}
 $$
 
 where:
@@ -220,7 +241,7 @@ $$
 \mathcal{L}_{\mathrm{orig}}(\theta)=
 \frac{1}{|D_{\mathrm{train}}|}
 \sum_i
-\left(A_\theta(\Phi(x_i))-r(z_i)\right)^2
+(A_\theta(\Phi(x_i))-r(z_i))^2
 $$
 
 SR-EEG adds a local-neighborhood consistency term:
@@ -229,13 +250,13 @@ $$
 \mathcal{L}_{\mathrm{SR}}(\theta)=
 \frac{1}{|D_{\mathrm{train}}|}
 \sum_i
-\left(A_\theta(\Phi(x_i))-r(z_i)\right)^2
+(A_\theta(\Phi(x_i))-r(z_i))^2
 +
 \lambda_{\mathrm{stab}}
 \mathbb{E}_{\delta}
-\left[
-\left(A_\theta(\Phi(x_i+\delta))-r(z_i)\right)^2
-\right]
+[
+(A_\theta(\Phi(x_i+\delta))-r(z_i))^2
+]
 $$
 
 where:
@@ -276,9 +297,9 @@ Following Bishop's noise-regularization result:
 
 $$
 \mathbb{E}_{\delta}
-\left[
+[
 (A(x+\delta)-r)^2
-\right]
+]
 \approx
 (A(x)-r)^2
 +
@@ -341,9 +362,9 @@ $$
 +
 \lambda_{\mathrm{cost}}
 \mathbb{E}_{x}
-\left[
+[
 a_q(x)c_g(x)+(1-a_q(x))c_b(x)
-\right]
+]
 $$
 
 subject to:
@@ -374,20 +395,20 @@ The extension was implemented around the original EEG pipeline:
 
 | File | Role |
 |---|---|
-| `pipeline_step_1.py` | Dataset preparation and cross-validation splits |
-| `pipeline_step_2.py` | Glass-box and black-box model training |
-| `pipeline_step_3.py` | Observation-level loss and sufficiency calculations |
-| `pipeline_step_4.py` | Original EEG allocator training |
-| `experiment_stability.py` | Controlled before-versus-after perturbation experiment |
-| `perturbation_utils.py` | Scale-aware perturbations for tabular features |
-| `evaluate_eeg.py` | Evaluation metrics including AFR and prediction consistency |
-| `scripts/03_run_stability_experiment.py` | Cross-dataset stability benchmark |
-| `scripts/06_analyze_allocator_shap.py` | SHAP analysis of allocator decisions |
-| `cost_aware_allocator.py` | Raw-input allocator and conditional execution engine |
-| `threshold_selection.py` | Matched-coverage and cost-performance threshold selection |
-| `experiment_cost_aware.py` | Multi-seed cost-aware experiment runner |
-| `benchmark_inference_timing.py` | Inference latency measurement |
-| `test_cost_aware_allocator.py` and `test_threshold_selection.py` | Cost-aware unit tests |
+| [`pipeline_step_1.py`](./pipeline_step_1.py) | Dataset preparation and cross-validation splits |
+| [`pipeline_step_2.py`](./pipeline_step_2.py) | Glass-box and black-box model training |
+| [`pipeline_step_3.py`](./pipeline_step_3.py) | Observation-level loss and sufficiency calculations |
+| [`pipeline_step_4.py`](./pipeline_step_4.py) | Original EEG allocator training |
+| [`experiment_stability.py`](./experiment_stability.py) | Controlled before-versus-after perturbation experiment |
+| [`perturbation_utils.py`](./perturbation_utils.py) | Scale-aware perturbations for tabular features |
+| [`evaluate_eeg.py`](./evaluate_eeg.py) | Evaluation metrics including AFR and prediction consistency |
+| [`scripts/03_run_stability_experiment.py`](./scripts/03_run_stability_experiment.py) | Cross-dataset stability benchmark |
+| [`scripts/06_analyze_allocator_shap.py`](./scripts/06_analyze_allocator_shap.py) | SHAP analysis of allocator decisions |
+| [`cost_aware_allocator.py`](./cost_aware_allocator.py) | Raw-input allocator and conditional execution engine |
+| [`threshold_selection.py`](./threshold_selection.py) | Matched-coverage and cost-performance threshold selection |
+| [`experiment_cost_aware.py`](./experiment_cost_aware.py) | Multi-seed cost-aware experiment runner |
+| [`benchmark_inference_timing.py`](./benchmark_inference_timing.py) | Inference latency measurement |
+| [`test_cost_aware_allocator.py`](./test_cost_aware_allocator.py) and [`test_threshold_selection.py`](./test_threshold_selection.py) | Cost-aware unit tests |
 
 ## 4.2 Component models
 
