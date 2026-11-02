@@ -470,7 +470,7 @@ The extension was implemented around the original EEG pipeline:
 
 ## 4.3 Datasets
 
-**Why these datasets:** Wine and Phoneme are used for the detailed before-and-after comparison. The larger benchmark checks whether the stability pattern also appears across different tabular datasets.
+**Why these datasets:** Wine and Phoneme are used for the detailed before-and-after comparison. The perturbation/stability implementation was initially evaluated on 12 datasets, then expanded to a 24-dataset benchmark to check whether the stability pattern also appears across different tabular datasets.
 
 The controlled before-versus-after experiment used:
 
@@ -479,10 +479,12 @@ The controlled before-versus-after experiment used:
 | Wine | Binary classification | 2,554 | 11 |
 | Phoneme | Binary classification | 3,172 | 5 |
 
-The broader robustness and meta-explainability benchmarks used **24 tabular datasets**:
+The initial perturbation/stability implementation used **12 datasets**. This was later expanded to **24 tabular datasets** for the extended robustness benchmark and the meta-explainability benchmark:
 
 - 12 classification datasets; and
 - 12 regression datasets.
+
+Therefore, the dataset counts refer to different evaluation stages: 2 datasets for the detailed presentation comparison, 12 datasets in the initial stability implementation, and 24 datasets in the expanded stability and SHAP artifacts.
 
 ## 4.4 Perturbation protocol
 
@@ -652,7 +654,7 @@ The largest gains occur at low and moderate explainability levels, where the ori
 
 ## 5.4 Cross-dataset robustness benchmark
 
-The extended benchmark covers 24 datasets and 6,480 full test trials across perturbation levels, seeds, and explainability levels.
+The perturbation study was first implemented across 12 datasets. It was subsequently expanded to 24 datasets—12 classification and 12 regression datasets—with 6,480 full test trials across perturbation levels, seeds, and explainability levels.
 
 ### Classification datasets
 
@@ -803,7 +805,7 @@ This project extends EEG in three ways:
 |---|---|
 | Research gap identification | Identifies allocation instability under small input perturbations as an unaddressed limitation |
 | Methodological improvement | Introduces SR-EEG using local neighborhood consistency and noise-based regularization |
-| Experimental validation | Provides before-and-after evaluation across perturbation strengths, explainability levels, and 24 benchmark datasets |
+| Experimental validation | Provides detailed before-and-after evaluation on Wine and Phoneme, an initial 12-dataset stability implementation, and an expanded 24-dataset benchmark |
 | Meta-explainability | Uses SHAP to explain which features drive the allocator itself |
 | Cost-aware allocation | Implements a raw-input gate and conditional execution, with measured latency and compute savings |
 
@@ -812,7 +814,7 @@ This project extends EEG in three ways:
 - The perturbation study focuses mainly on continuous tabular features.
 - Uniform additive perturbations are controlled stress tests and do not represent every real-world distribution shift.
 - Categorical changes, missing-value changes, and structured temporal shifts require separate perturbation operators.
-- The controlled detailed experiment focuses on Wine and Phoneme; the larger benchmark reports aggregate stability results across 24 datasets.
+- The controlled detailed experiment focuses on Wine and Phoneme. The perturbation implementation was initially evaluated on 12 datasets and later expanded to 24 datasets for the larger stability and SHAP benchmarks.
 - Hyperparameter tuning depends on validation data and may not cover shifts substantially larger than the training perturbation scale.
 - At extreme explainability levels, especially \(q\geq0.70\), SR-EEG can show a small stability trade-off because the routing boundary becomes compressed.
 - The cost-aware benchmark focuses on Wine classification; different hardware, datasets, model families, and explanation mechanisms may produce different cost savings.
