@@ -55,7 +55,7 @@ The detailed equations and tables below provide evidence. During the video, expl
 
 The original paper, *Learning Performance Maximizing Ensembles with Explainability Guarantees*, was written by **Vincent Pisztora and Jia Li** and published at **AAAI 2024**.
 
-**Simple explanation:** The paper combines two models. One model is easy to understand, and the other is more powerful. EEG decides which model should handle each individual sample.
+**Explanation:** The paper combines two models. One model is easy to understand, and the other is more powerful. EEG decides which model should handle each individual sample.
 
 The paper introduces **Ensembles with Explainability Guarantees (EEG)**. The central idea is to combine:
 
@@ -80,7 +80,7 @@ The original method asks:
 
 ## 1.3 How EEG performs allocation
 
-**Simple explanation:** EEG first estimates which model is better for each sample. Then an allocator uses that information to send easy samples to the glass-box model and difficult samples to the black-box model, while trying to satisfy the required explainability percentage \(q\).
+**Explanation:** EEG first estimates which model is better for each sample. Then an allocator uses that information to send easy samples to the glass-box model and difficult samples to the black-box model, while trying to satisfy the required explainability percentage \(q\).
 
 For every training observation \(z_i=(x_i,y_i)\), EEG estimates whether the glass-box or black-box model is sufficient. These observations are placed into four conceptual groups:
 
@@ -143,7 +143,7 @@ This reproduction established that the original implementation was a suitable ba
 
 # 2. Research Gap
 
-**Simple explanation:** The original method works on clean data, but it does not answer three practical questions: will the routing stay the same after small noise, can we explain the allocator, and does the system actually save computation?
+**Explanation:** The original method works on clean data, but it does not answer three practical questions: will the routing stay the same after small noise, can we explain the allocator, and does the system actually save computation?
 
 ## 2.1 Identified limitations and extension opportunities
 
@@ -296,7 +296,7 @@ The clean and perturbed versions of an observation use the same target ranking \
 
 ### The core paradox: who explains the explainer?
 
-**Simple explanation:** SHAP answers, “Which features pushed this sample toward the glass-box or black-box route?” We group the explanations into model disagreement signals and original domain features.
+**Explanation:** SHAP answers, “Which features pushed this sample toward the glass-box or black-box route?” We group the explanations into model disagreement signals and original domain features.
 
 EEG routes observations to a glass-box model to provide explainable predictions, but the allocator that makes this routing decision is itself a complex Gradient Boosting Regressor. Without an explanation of the allocator, the system is only partially interpretable.
 
@@ -361,7 +361,7 @@ The perturbation term therefore acts as a smoothness penalty. It discourages sha
 
 ## 3.6 Cost-aware allocation
 
-**Simple explanation:** The cost-aware gate looks only at \(X\), predicts which route is appropriate, and calls only that model. It does not run both models first.
+**Explanation:** The cost-aware gate looks only at \(X\), predicts which route is appropriate, and calls only that model. It does not run both models first.
 
 SR-EEG focuses on robustness, but a deployed ensemble may also have unequal prediction and explanation costs. For example, a black-box model may require more computation, while generating a post-hoc explanation may add latency. A practical allocator should therefore optimize more than accuracy alone.
 
@@ -488,7 +488,7 @@ Therefore, the dataset counts refer to different evaluation stages: 2 datasets f
 
 ## 4.4 Perturbation protocol
 
-**Simple explanation:** We add small random changes to continuous features, then check whether the route and prediction stay the same.
+**Explanation:** We add small random changes to continuous features, then check whether the route and prediction stay the same.
 
 For continuous features scaled to \([-1,1]\):
 
@@ -558,7 +558,7 @@ The realized value should remain close to the requested target \(q\).
 
 ## 4.6 Meta-explainability implementation
 
-**Simple explanation:** We run SHAP on the allocator, not only on the glass-box or black-box predictor. This tells us what caused the routing decision.
+**Explanation:** We run SHAP on the allocator, not only on the glass-box or black-box predictor. This tells us what caused the routing decision.
 
 The allocator was analyzed separately from the component predictors:
 
@@ -744,7 +744,7 @@ The allocator itself is a learned model. We therefore used TreeSHAP to study whi
 
 ## 5.7 Cost-aware allocation results
 
-**Main message:** The cost-aware gate saves time because it avoids running the expensive black-box model when the glass-box route is selected. The small accuracy decrease at \(q=0.80\) is a visible trade-off, not hidden.
+**Main :** The cost-aware gate saves time because it avoids running the expensive black-box model when the glass-box route is selected. The small accuracy decrease at \(q=0.80\) is a visible trade-off, not hidden.
 
 The cost-aware benchmark used the Wine classification dataset, three random seeds, and strict validation-only threshold selection. The original EEG pipeline is compared with the raw-input cost-aware gate at matched target quotas.
 
@@ -784,7 +784,7 @@ The cost-aware benchmark used the Wine classification dataset, three random seed
 
 # 6. Conclusion
 
-**Final explanation in simple words:** We started with a useful but fragile routing method. We made it more stable, explained why it routes samples, and made it cheaper to run.
+**Final explanation:** We started with a useful but fragile routing method. We made it more stable, explained why it routes samples, and made it cheaper to run.
 
 ## 6.1 Key findings
 
