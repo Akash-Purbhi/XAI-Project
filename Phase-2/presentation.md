@@ -401,7 +401,7 @@ subject to:
 $$
 \frac{1}{N}\sum_i a_q(x_i)\geq q
 \qquad\text{and}\qquad
-\operatorname{Acc}(q)\geq \operatorname{Acc}_{\min}.
+\mathrm{Acc}(q)\geq \mathrm{Acc}_{\min}.
 $$
 
 This creates a **performance-maximizing, explainability-constrained, cost-aware ensemble**. The implementation compares:
@@ -493,7 +493,7 @@ Therefore, the dataset counts refer to different evaluation stages: 2 datasets f
 For continuous features scaled to \([-1,1]\):
 
 $$
-\tilde{x}=\operatorname{clip}(x+\delta,-1,1),
+\tilde{x}=\mathrm{clip}(x+\delta,-1,1),
 \qquad
 \delta\sim\mathcal{U}(-\epsilon,\epsilon)
 $$
@@ -513,7 +513,7 @@ Three random seeds were evaluated: \(0,1,2\). Categorical indicator features wer
 ### Allocation Flip Rate
 
 $$
-\operatorname{AFR}(q)=
+\mathrm{AFR}(q)=
 \frac{1}{N}
 \sum_{i=1}^{N}
 \mathbb{I}\{a_q(x_i)\neq a_q(\tilde{x}_i)\}
@@ -525,7 +525,7 @@ Lower is better.
 ### Prediction Consistency
 
 $$
-\operatorname{PC}(q)=
+\mathrm{PC}(q)=
 \frac{1}{N}
 \sum_{i=1}^{N}
 \mathbb{I}\{\hat y(x_i;q)=\hat y(\tilde{x}_i;q)\}
@@ -537,7 +537,7 @@ Higher is better.
 ### Perturbed task accuracy
 
 $$
-\operatorname{Acc}_{\mathrm{pert}}(q)=
+\mathrm{Acc}_{\mathrm{pert}}(q)=
 \frac{1}{N}
 \sum_{i=1}^{N}
 \mathbb{I}\{\hat y(\tilde{x}_i;q)=y_i\}
