@@ -111,21 +111,17 @@ def build_report():
                  fontweight="bold", color=BLUE)
         add_wrapped_text(
             fig, 0.08, 0.852,
-            "The original EEG paper learns an allocator from raw features together with component-model "
-            "predictions and disagreement features. This creates a deployment gap: the black-box prediction "
-            "is needed before the routing decision, so the expensive model is executed even for observations "
-            "that are ultimately assigned to the glass-box model.",
+            "Phase 2 investigates three distinct limitations of the original EEG framework: routing instability "
+            "under perturbations, the opacity of the allocator itself, and unnecessary pre-routing computation.",
             width=105)
         fig.text(0.08, 0.755, "Identified gap → proposed solution → measurable prediction", fontsize=11,
                  fontweight="bold", color=BLUE)
         chain = [
-            ("Gap", "Pre-routing black-box execution makes the original pipeline's latency invariant to q."),
-            ("Solution", "Cost-Aware EEG trains an X-only Stage-0 gate and executes only the selected component model."),
-            ("Implementation", "The Phase-2 allocator, threshold selection, conditional execution, and timing benchmark are in "
-                               "cost_aware_allocator.py, threshold_selection.py, experiment_cost_aware.py, and "
-                               "benchmark_inference_timing.py."),
-            ("Evidence", "Compare published Table 2 values, the local Original_EEG reproduction, and the new CostAware_EEG "
-                         "measurements under the same Wine benchmark and three seeds.")
+            ("Gap 3", "Small feature perturbations can flip model assignments and explanations."),
+            ("Gap 6", "The allocator is opaque; users cannot see why it routed an observation."),
+            ("Cost-aware", "The original gate needs black-box outputs before routing, wasting computation."),
+            ("Solutions", "SR-EEG stabilizes routing; TreeSHAP explains routing; Cost-Aware EEG enables conditional execution."),
+            ("Evidence", "Separate results are reported for the 24-dataset stability, SHAP, and Wine cost benchmarks.")
         ]
         y = 0.715
         for label, body in chain:
@@ -136,15 +132,14 @@ def build_report():
             fig.text(0.17, y - 0.031, label, ha="center", va="center",
                      fontsize=9.5, fontweight="bold", color=MID_BLUE)
             add_wrapped_text(fig, 0.29, y - 0.013, body, width=75, fontsize=8.5)
-            y -= 0.105
-        fig.text(0.08, 0.275, "Experimental design", fontsize=11,
+            y -= 0.092
+        fig.text(0.08, 0.285, "Experimental design", fontsize=11,
                  fontweight="bold", color=BLUE)
         add_wrapped_text(
-            fig, 0.08, 0.245,
-            "Wine classification benchmark (N=537 test observations), target glass-box quotas q ∈ "
-            "{0.20, 0.40, 0.60, 0.80}, seeds {0, 1, 2}, validation-only threshold selection, and "
-            "50 timing repetitions after 10 warm-up runs. Accuracy, Macro-F1, cross-entropy, actual coverage, "
-            "latency, and realized cost are reported.",
+            fig, 0.08, 0.255,
+            "Gap 3 and Gap 6 use 24 datasets, seeds {0, 1, 2}, five perturbation levels, and q values "
+            "from 0.1 to 0.9. The cost-aware experiment uses Wine (N=537), q ∈ {0.20, 0.40, 0.60, 0.80}, "
+            "validation-only thresholds, and 50 timing repetitions after 10 warm-up runs.",
             width=105, fontsize=9)
         fig.patches.append(plt.Rectangle((0.08, 0.08), 0.84, 0.095,
                                          transform=fig.transFigure,
@@ -226,7 +221,103 @@ def build_report():
         pdf.savefig(fig)
         plt.close(fig)
 
-        # Page 4: published vs local original vs proposed metrics.
+        # Page 4: Gap 3 stability results.
+        fig = plt.figure(figsize=(8.5, 11), dpi=220)
+        add_header(fig, "GAP 3 — PERTURBATION STABILITY",
+                   "Original EEG vs. Stability-Robust EEG (SR-EEG), 24 datasets")
+        fig.text(0.08, 0.885, "Research gap and proposed improvement", fontsize=11,
+                 fontweight="bold", color=BLUE)
+        add_wrapped_text(
+            fig, 0.08, 0.852,
+            "The original EEG allocator is trained on clean rankings and then applies a hard threshold. "
+            "Small normalized feature perturbations can move an observation across the routing boundary. "
+            "SR-EEG adds neighborhood perturbation augmentation and regularization so nearby inputs receive "
+            "more consistent allocation decisions.",
+            width=105, fontsize=9)
+        stability = pd.read_csv(RESULTS.parent / "stability_master.csv")
+        stab = stability[stability["Epsilon"] == 0.05].groupby("Method").agg(
+            afr=("AFR", "mean"),
+            pc=("Prediction_Consistency", "mean"),
+            clean=("Clean_Perf", "mean"),
+            perturbed=("Perturbed_Perf", "mean"),
+        ).reset_index()
+        stab_rows = [[row.Method, f"{row.afr:.2f}%",
+                      f"{row.pc:.2f}%", f"{row.clean:.2f}%",
+                      f"{row.perturbed:.2f}%"]
+                     for row in stab.itertuples()]
+        fig.text(0.08, 0.735, "Table 3. Cross-dataset mean at ε=0.05 (24 datasets, all q and seeds).",
+                 fontsize=9.5, fontweight="bold", color=BLUE)
+        add_table(fig, stab_rows,
+                  ["Method", "AFR (lower)", "Prediction consistency\n(higher)",
+                   "Clean performance", "Perturbed performance"],
+                  [0.08, 0.57, 0.84, 0.13], fontsize=7.8)
+        fig.text(0.08, 0.515, "Representative benchmark findings", fontsize=10.5,
+                 fontweight="bold", color=BLUE)
+        add_wrapped_text(
+            fig, 0.08, 0.482,
+            "At ε=0.05, documented reductions include CPU_R: 27.74% → 7.77% (72.0%), "
+            "California: 21.84% → 9.67% (55.7%), BrazilianHouses_R: 40.47% → 18.66% (53.9%), "
+            "and Wine: 14.68% → 8.56% (41.7%). These values are from results/stability_master.csv "
+            "and PHASE2_RESULTS_GAP3.md.",
+            width=105, fontsize=8.8)
+        img = mpimg.imread(ROOT / "results" / "figures" / "gap3_cross_dataset_stability.png")
+        ax = fig.add_axes([0.08, 0.08, 0.84, 0.29])
+        ax.imshow(img)
+        ax.axis("off")
+        fig.text(0.08, 0.045,
+                 "Gap 3 conclusion: SR-EEG improves routing stability while preserving the task objective; "
+                 "it addresses robustness, not inference cost.",
+                 fontsize=8.3, style="italic", color="#4a5568")
+        pdf.savefig(fig)
+        plt.close(fig)
+
+        # Page 5: Gap 6 meta-explainability results.
+        fig = plt.figure(figsize=(8.5, 11), dpi=220)
+        add_header(fig, "GAP 6 — META-EXPLAINABILITY",
+                   "Explaining the EEG allocator with TreeSHAP")
+        fig.text(0.08, 0.885, "Research gap and proposed improvement", fontsize=11,
+                 fontweight="bold", color=BLUE)
+        add_wrapped_text(
+            fig, 0.08, 0.852,
+            "EEG routes observations for explainability, but its gradient-boosted allocator is itself opaque. "
+            "Gap 6 asks: who explains the explainer? TreeSHAP quantifies whether routing is driven by raw domain "
+            "features or by disagreement and confidence between component models.",
+            width=105, fontsize=9)
+        shap = pd.read_csv(RESULTS.parent / "shap_meta_summary.csv")
+        mean_orig_domain = shap["Original_Domain_Feature_Share"].mean()
+        mean_orig_model = shap["Original_Disagreement_Confidence_Share"].mean()
+        mean_sr_domain = shap["SREEG_Domain_Feature_Share"].mean()
+        mean_sr_model = shap["SREEG_Disagreement_Confidence_Share"].mean()
+        shap_rows = [
+            ["Original EEG", f"{mean_orig_model:.2f}%", f"{mean_orig_domain:.2f}%",
+             "Disagreement/model confidence"],
+            ["SR-EEG", f"{mean_sr_model:.2f}%", f"{mean_sr_domain:.2f}%",
+             "Disagreement remains dominant; shift is dataset-dependent"],
+        ]
+        fig.text(0.08, 0.735, "Table 4. Mean TreeSHAP attribution shares across 24 datasets.",
+                 fontsize=9.5, fontweight="bold", color=BLUE)
+        add_table(fig, shap_rows,
+                  ["Allocator", "Disagreement + outputs", "Raw domain features", "Interpretation"],
+                  [0.08, 0.50, 0.84, 0.18], fontsize=7.8)
+        add_wrapped_text(
+            fig, 0.08, 0.455,
+            "The SHAP summary shows that original EEG routing is primarily driven by component disagreement "
+            "and predictive confidence rather than domain features. This makes individual routing decisions "
+            "auditable: users can inspect whether an observation was sent to the black-box because the two "
+            "component models disagreed.",
+            width=105, fontsize=8.8)
+        img = mpimg.imread(ROOT / "results" / "figures" / "gap6_meta_explainability_summary.png")
+        ax = fig.add_axes([0.08, 0.10, 0.84, 0.29])
+        ax.imshow(img)
+        ax.axis("off")
+        fig.text(0.08, 0.06,
+                 "Gap 6 conclusion: TreeSHAP makes the routing mechanism inspectable; it addresses "
+                 "meta-explainability, not perturbation stability or compute cost.",
+                 fontsize=8.3, style="italic", color="#4a5568")
+        pdf.savefig(fig)
+        plt.close(fig)
+
+        # Page 6: published vs local original vs proposed metrics.
         fig = plt.figure(figsize=(8.5, 11), dpi=220)
         add_header(fig, "BEFORE-AND-AFTER RESULTS",
                    "Published EEG values, local Original_EEG reproduction, and Phase-2 CostAware_EEG")
@@ -358,27 +449,33 @@ def build_report():
             width=105, fontsize=9)
         fig.text(0.08, 0.735, "Main findings", fontsize=11, fontweight="bold", color=BLUE)
         findings = [
+            "Gap 3: SR-EEG reduces allocation flips under controlled perturbations across the 24-dataset benchmark.",
+            "Gap 6: TreeSHAP shows that routing is primarily driven by component disagreement and confidence, making the allocator auditable.",
             "At q=0.20–0.60, the proposed method remains close to the reproduced original accuracy while reducing measured latency and realized cost.",
             "At q=0.80, the accuracy decrease is reported rather than hidden; it is the observed price of removing model-output features from the pre-routing gate.",
-            "The improvement addresses a deployment/computation gap, not a claim that X-only allocation dominates the published feature-rich allocator on every accuracy metric.",
+            "The three extensions address different failure modes: robustness, auditability, and deployment cost.",
         ]
         y = 0.70
         for item in findings:
             fig.text(0.10, y, "•", fontsize=13, color=MID_BLUE)
-            add_wrapped_text(fig, 0.125, y + 0.004, item, width=92, fontsize=9)
-            y -= 0.085
-        fig.text(0.08, 0.435, "References", fontsize=11, fontweight="bold", color=BLUE)
+            add_wrapped_text(fig, 0.125, y + 0.004, item, width=92, fontsize=8.5)
+            y -= 0.065
+        fig.text(0.08, 0.345, "References", fontsize=11, fontweight="bold", color=BLUE)
         refs = (
             "[1] Pisztora, V., and Li, J. (2024). Learning Performance Maximizing Ensembles with "
             "Explainability Guarantees. Proceedings of AAAI-24, 38(13), 14594–14602. "
             "Source extracts used: printed pp. 14621–14623 in the supplied PDF.\n\n"
-            "[2] Teerapittayanont, S., McDanel, B., and Kung, H. T. (2016). BranchyNet: Fast Inference "
+            "[2] Dai, D. et al. (2022). StableMoE: Stable Routing Strategy for Mixture of Experts. ACL. "
+            "Supporting literature for routing stability and the Gap 3 motivation.\n\n"
+            "[3] Teerapittayanont, S., McDanel, B., and Kung, H. T. (2016). BranchyNet: Fast Inference "
             "via Early Exiting from Deep Neural Networks. ICPR, 2464–2469. "
             "DOI: 10.1109/ICPR.2016.7900001.\n\n"
-            "[3] Bishop, C. M. (1995). Training with Noise is Equivalent to Tikhonov Regularization. "
+            "[4] Lundberg, S. M., and Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions. "
+            "NeurIPS. Supporting literature for TreeSHAP-based meta-explainability.\n\n"
+            "[5] Bishop, C. M. (1995). Training with Noise is Equivalent to Tikhonov Regularization. "
             "Neural Computation, 7(1), 108–116. (Methodological context for regularization and robustness.)"
         )
-        add_wrapped_text(fig, 0.08, 0.402, refs, width=105, fontsize=8.7, line_spacing=1.3)
+        add_wrapped_text(fig, 0.08, 0.312, refs, width=105, fontsize=7.2, line_spacing=1.1)
         fig.text(0.08, 0.175, "Reproducibility record", fontsize=11, fontweight="bold", color=BLUE)
         add_wrapped_text(
             fig, 0.08, 0.142,
