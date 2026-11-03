@@ -9,7 +9,7 @@
 > **Course Project:** Explainable Artificial Intelligence (XAI)  
 > **Target Paper:** *"Learning Performance Maximizing Ensembles with Explainability Guarantees"*  
 > **Authors:** Vincent Pisztora, Jia Li (AAAI 2024)  
-> **Scope:** Phase 1 — Strict Empirical & Methodological Replication (5 Datasets, 5 Replicate Seeds)
+> **Scope:** Phase 1 replication plus **Phase 2 major research implementation** covering three research gaps, their experiments, and reproducible results.
 
 ---
 
@@ -26,6 +26,7 @@
 10. [Replication Results & Comparison to AAAI 2024 Paper](#10-replication-results--comparison-to-aaai-2024-paper)
 11. [Critical Discussion & Analysis of Discrepancies](#11-critical-discussion--analysis-of-discrepancies)
 12. [Reproducibility & Verification](#12-reproducibility--verification)
+13. [Phase 2 Major Research Implementation](#13-phase-2-major-research-implementation)
 
 ---
 
@@ -346,3 +347,66 @@ Below is the consolidated comparison between the numbers published in Pisztora &
 - **Data Integrity:** Dataset hashes and OpenML identifiers are checked on load to prevent silent data drifts.
 - **Leakage Prevention:** Standard scalers and categorical encoders are strictly fitted on `X_train` and applied to `X_val` and `X_test`.
 - **Zero Mocking:** All numbers, curves, and tables are computed from actual model fits on the specified OpenML datasets.
+
+---
+
+## 13. Phase 2 Major Research Implementation
+
+The `Phase-2/` directory is the project's **major implementation and research-extension folder**. It extends the original EEG replication with three documented research gaps:
+
+1. **Perturbation stability (Gap 3):** Measures allocation flips under realistic input noise and evaluates the Stability-Robust EEG (SR-EEG) allocator.
+2. **Meta-explainability (Gap 6):** Uses TreeSHAP to explain why the EEG allocator routes an observation to the glass-box or black-box model.
+3. **Cost-aware inference:** Removes pre-routing black-box execution with an X-only gate and conditional model execution, then measures latency and compute savings.
+
+Phase 2 includes the implementation scripts, 24-dataset stability and SHAP artifacts, Wine cost-aware benchmarks, comparison tables, figures, research-gap documents, and the final experimental-results PDF:
+
+- [Phase-2 README](Phase-2/README.md)
+- [Phase-2 experimental-results PDF](Phase-2/phase2_experimental_results_comparison.pdf)
+- [Phase-2 research-gap and results documents](Phase-2/)
+
+### Phase 2 dependencies, execution procedure, and reproduction
+
+#### Dependencies
+
+Phase 2 uses the pinned Python 3.8 environment described in [`Phase-2/requirements_reproducibility.txt`](Phase-2/requirements_reproducibility.txt) and [`Phase-2/env_eeg.yml`](Phase-2/env_eeg.yml). The main dependencies are NumPy, SciPy, pandas, scikit-learn, TensorFlow, matplotlib, tqdm, requests, and OpenML dataset access.
+
+```bash
+conda env create -f Phase-2/env_eeg.yml
+conda activate env_eeg
+```
+
+#### Execution procedure
+
+Run commands from `Phase-2/` in this order:
+
+1. Verify the environment and prepare datasets.
+2. Reproduce the original EEG baseline.
+3. Run the Gap 3 perturbation-stability/SR-EEG benchmark.
+4. Run the Gap 6 TreeSHAP meta-explainability analysis.
+5. Run the cost-aware timing and conditional-execution benchmark.
+6. Generate figures, tables, and the comparison PDF.
+
+#### Steps to reproduce the Phase 2 experiments
+
+```bash
+cd Phase-2
+conda activate env_eeg
+
+# Gap 3: stability benchmark and aggregation
+python scripts/01_verify_environment.py
+python scripts/02_prepare_datasets.py
+python scripts/03_run_stability_experiment.py
+python scripts/04_aggregate_and_plot_gap3.py
+python scripts/05_run_gap3_benchmark.py
+
+# Gap 6: allocator meta-explainability
+python scripts/06_analyze_allocator_shap.py
+
+# Cost-aware inference and final report
+python benchmark_inference_timing.py
+python experiment_cost_aware.py --seeds 0 1 2 --q_targets 0.20 0.40 0.60 0.80
+python generate_cost_aware_results.py
+python generate_phase2_experimental_results_pdf.py
+```
+
+For the full dependency notes, original baseline commands, expected artifacts, and the focused Wine/Phoneme reproduction commands, see the [Phase-2 README](Phase-2/README.md).

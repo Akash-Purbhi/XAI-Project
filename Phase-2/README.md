@@ -13,6 +13,8 @@
 ## Project Overview
 This repository contains the official code for the AAAI 2024 paper **"Learning Performance Maximizing Ensembles with Explainability Guarantees"** (Pisztora & Li, 2024; [arXiv:2312.12715](https://arxiv.org/abs/2312.12715), [AAAI](https://ojs.aaai.org/index.php/AAAI/article/view/29378/30602)), along with our **Phase 2 Research Extension**:
 
+**Phase 2 is the major implementation for this project.** It contains the complete research-gap analysis, implementations, controlled experiments, result tables, visualizations, and the final comparison PDF for three extensions of EEG: perturbation stability, meta-explainability, and cost-aware inference.
+
 ### Phase 2 Research Extension:
 **"Robustness of Explainable Model Allocation under Input Perturbations: A Stability-Aware Extension of Ensembles with Explainability Guarantees"**
 - **Research Question:** *How stable are EEG allocation decisions under small, realistic perturbations to input features, and can a stability-aware allocation mechanism reduce unnecessary allocation changes while preserving predictive performance and explainability guarantees?*
@@ -36,6 +38,15 @@ This repository contains the official code for the AAAI 2024 paper **"Learning P
 - [PHASE2_ONE_PAGE_SUMMARY.md](PHASE2_ONE_PAGE_SUMMARY.md): One-page summary required by the course guidelines.
 - [AI_USAGE.md](AI_USAGE.md): Full AI disclosure detailing tool usage, prompts, and human validation.
 - [requirements_reproducibility.txt](requirements_reproducibility.txt): Exact Python package versions, seeds, dataset IDs, and execution commands.
+
+### Gap 3 and Gap 6 benchmark artifacts:
+- [PHASE2_RESULTS_GAP3.md](PHASE2_RESULTS_GAP3.md): 24-dataset perturbation-stability results.
+- [PHASE2_RESULTS_GAP6.md](PHASE2_RESULTS_GAP6.md): 24-dataset TreeSHAP meta-explainability results.
+- [results/stability_master.csv](results/stability_master.csv): Aggregated stability metrics.
+- [results/shap_meta_summary.csv](results/shap_meta_summary.csv): Aggregated allocator-attribution metrics.
+- [results/figures/gap3_cross_dataset_stability.png](results/figures/gap3_cross_dataset_stability.png): Gap 3 figure.
+- [results/figures/gap6_meta_explainability_summary.png](results/figures/gap6_meta_explainability_summary.png): Gap 6 figure.
+- [phase2_experimental_results_comparison.pdf](phase2_experimental_results_comparison.pdf): Combined experimental-results report.
 
 ---
 
@@ -77,72 +88,139 @@ This repository contains the official code for the AAAI 2024 paper **"Learning P
 
 ---
 
-## Environment Setup
-The project runs under Python 3.8 with Conda:
-```bash
-# Activate existing environment
-conda activate env_eeg
+## Dependencies
 
-# Or build from scratch using env_eeg.yml
+The reproducibility environment uses Python 3.8.8 and the pinned scientific stack in [requirements_reproducibility.txt](requirements_reproducibility.txt). The full Conda lock-style specification is available in [env_eeg.yml](env_eeg.yml).
+
+Core dependencies include:
+
+- Python 3.8.8
+- NumPy 1.19.2, SciPy 1.6.2, pandas 1.2.4
+- scikit-learn 1.0.2
+- TensorFlow 2.3.0
+- matplotlib 3.3.4, Pillow, tqdm, requests
+- OpenML access for the benchmark datasets
+
+Create and activate the environment:
+```bash
 conda env create -f env_eeg.yml
 conda activate env_eeg
 ```
 
----
+If the environment already exists:
+```bash
+conda activate env_eeg
+```
 
-## Step-by-Step Execution & Reproducibility
+Install or verify the pinned packages when using a compatible Python 3.8 environment:
+```bash
+python -m pip install -r requirements_reproducibility.txt
+```
+
+## Execution Procedure
+
+Run all commands from the Phase-2 directory:
+```bash
+cd Phase-2
+conda activate env_eeg
+```
+
+The experiments should be executed in this order:
+
+1. Verify the environment and prepare the datasets.
+2. Run the original EEG pipeline to create the reproduced baseline.
+3. Run the Gap 3 stability benchmark and aggregate its results.
+4. Run the Gap 6 TreeSHAP analysis and aggregate its results.
+5. Run the cost-aware latency and conditional-execution benchmarks.
+6. Generate figures, comparison tables, and the final PDF.
+
+Existing generated CSVs and figures can be inspected without rerunning the expensive experiments.
+
+## Steps to Reproduce the Experiments
 
 ### 1. Run Unit Tests for Evaluation Metrics
 ```bash
-conda run -n env_eeg python test_evaluate_eeg.py
+python test_evaluate_eeg.py
+python -m unittest discover tests -v
 ```
 
 ### 2. Original Method Pipeline Execution (Wine Benchmark)
 ```bash
 # Step 1: Data splits
-conda run -n env_eeg python pipeline_step_1.py --run_machine=local --n_splits=4 --split_type=kfold --dataset_name=Wine
+python pipeline_step_1.py --run_machine=local --n_splits=4 --split_type=kfold --dataset_name=Wine
 
 # Step 2: Component models
-conda run -n env_eeg python pipeline_step_2.py --run_machine=local --model_type=logistic_regression --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
-conda run -n env_eeg python pipeline_step_2.py --run_machine=local --model_type=gradient_boosting_trees_classifier --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
+python pipeline_step_2.py --run_machine=local --model_type=logistic_regression --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
+python pipeline_step_2.py --run_machine=local --model_type=gradient_boosting_trees_classifier --n_splits=4 --split_type=kfold --fit_all_splits=False --dataset_name=Wine
 
 # Step 3: Losses
-conda run -n env_eeg python pipeline_step_3.py --run_machine=local --dataset_name=Wine
+python pipeline_step_3.py --run_machine=local --dataset_name=Wine
 
 # Step 4: Original Allocator
-conda run -n env_eeg python pipeline_step_4.py --run_machine=local --r_cutoff_type=val --hyper_set=large --rank_type=bb_minus_gb --feat_type=all --dist_type=cemse --rep=0 --dataset_name=Wine --allocator_type=gradient_boosting_trees_regressor
+python pipeline_step_4.py --run_machine=local --r_cutoff_type=val --hyper_set=large --rank_type=bb_minus_gb --feat_type=all --dist_type=cemse --rep=0 --dataset_name=Wine --allocator_type=gradient_boosting_trees_regressor
 
 # Step 5: Evaluate Baseline
-conda run -n env_eeg python evaluate_baseline_wine.py
+python evaluate_baseline_wine.py
 ```
 
-### 3. Controlled Perturbation & Before-vs-After Comparison (SR-EEG)
+### 3. Gap 3 — Perturbation Stability and SR-EEG
+
+For the focused Wine and Phoneme experiments:
 ```bash
-# Run Wine dataset evaluation across epsilons [0.00, 0.01, 0.02, 0.05, 0.10] and 3 seeds
-conda run -n env_eeg python experiment_stability.py --dataset_name=Wine
-
-# Run Phoneme dataset evaluation
-conda run -n env_eeg python experiment_stability.py --dataset_name=Phoneme
-
-# Render high-resolution publication figures
-conda run -n env_eeg python generate_combined_figures.py
+# Run controlled before-vs-after evaluation
+python experiment_stability.py --dataset_name=Wine
+python experiment_stability.py --dataset_name=Phoneme
+python generate_combined_figures.py
 ```
 
-### 4. Cost-Aware Allocation Execution Commands (New Work)
+For the full 24-dataset Gap 3 benchmark:
 ```bash
-# 1. Run inference latency benchmark
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 benchmark_inference_timing.py
-
-# 2. Run unit test suites (allocator, thresholding, and metrics)
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 test_cost_aware_allocator.py
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 test_threshold_selection.py
-
-# 3. Run controlled experimental evaluation across seeds [0, 1, 2] and quotas [0.2, 0.4, 0.6, 0.8]
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 experiment_cost_aware.py --seeds 0 1 2 --q_targets 0.20 0.40 0.60 0.80
-
-# 4. Generate all CSV deliverables, comparison tables, and 300 DPI publication figures
-/Library/Frameworks/Python.framework/Versions/3.12/bin/python3 generate_cost_aware_results.py
+python scripts/01_verify_environment.py
+python scripts/02_prepare_datasets.py
+python scripts/03_run_stability_experiment.py
+python scripts/04_aggregate_and_plot_gap3.py
+python scripts/05_run_gap3_benchmark.py
 ```
+
+Expected artifacts:
+`results/stability_master.csv`, `results/figures/gap3_cross_dataset_stability.png`, and per-dataset files under `results/stability/`.
+
+### 4. Gap 6 — Meta-explainability with TreeSHAP
+
+Run the allocator SHAP analysis after the baseline and stability artifacts are available:
+```bash
+python scripts/06_analyze_allocator_shap.py
+```
+
+Expected artifacts:
+`results/shap_meta_summary.csv`, `results/figures/gap6_meta_explainability_summary.png`, and per-dataset files under `results/shap/`.
+
+### 5. Cost-aware inference extension
+
+Run the timing benchmark, tests, controlled experiment, and result aggregation:
+```bash
+# Component and end-to-end inference timing
+python benchmark_inference_timing.py
+
+# Cost-aware allocator and threshold tests
+python test_cost_aware_allocator.py
+python test_threshold_selection.py
+python test_evaluate_eeg.py
+
+# Controlled evaluation across seeds and target quotas
+python experiment_cost_aware.py --seeds 0 1 2 --q_targets 0.20 0.40 0.60 0.80
+
+# Aggregate cost-aware CSVs, tables, and figures
+python generate_cost_aware_results.py
+
+# Generate the separate comparison PDF
+python generate_phase2_experimental_results_pdf.py
+```
+
+Expected artifacts include:
+`results/cost_aware_extension/comparison_results.csv`,
+`results/cost_aware_extension/inference_timing.csv`,
+the cost-aware figures, and `phase2_experimental_results_comparison.pdf`.
 
 ---
 
