@@ -470,14 +470,6 @@ The extension was implemented around the original EEG pipeline:
 
 ## 4.3 Datasets
 
-**Why these datasets:** Wine and Phoneme are used for the detailed before-and-after comparison. The perturbation/stability implementation was initially evaluated on 12 datasets, then expanded to a 24-dataset benchmark to check whether the stability pattern also appears across different tabular datasets.
-
-The controlled before-versus-after experiment used:
-
-| Dataset | Task | Samples | Features |
-|---|---|---:|---:|
-| Wine | Binary classification | 2,554 | 11 |
-| Phoneme | Binary classification | 3,172 | 5 |
 
 The initial perturbation/stability implementation used **12 datasets**. This was later expanded to **24 tabular datasets** for the extended robustness benchmark and the meta-explainability benchmark:
 
